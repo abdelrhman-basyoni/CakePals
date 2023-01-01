@@ -20,7 +20,7 @@
     "test:compile": "tsc&&mocha --recursive --exit -timeout 10000 ",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest  --config ./test/jest-e2e.json  --force-exit "
+    "test:e2e": "jest --maxWorkers 3  --no-cache --detectOpenHandles --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -78,6 +78,7 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
-    "testTimeout": 20000
+    "testTimeout": 20000,
+    "maxWorkers":3
   }
 }

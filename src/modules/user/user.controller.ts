@@ -14,7 +14,6 @@ import { UserRoles } from '../../enums/userRoles.enum';
 
 @ApiTags('User')
 @Controller('User')
-
 export class UserController {
 
     constructor(private service: UserService) { }
@@ -23,18 +22,17 @@ export class UserController {
 
     @Post('/register-member')
     // @HttpCode(HttpStatus.CREATED)
-    async signUp(@Res() response, @Body() body: RegisterMemberDto): Promise<ResponseDto> {
-        console.log({body})
+    async signUp(@Body() body: RegisterMemberDto): Promise<ResponseDto> {
+      
         body.role = UserRoles.member
         
-        const res = await this.service.create(body)
-        console.log('waiting reponse')
+        const serviceRes = await this.service.create(body)
         return {
             success: true,
             message: messages.success.message,
             code: messages.success.code,
             data: {
-                user: res
+                user: serviceRes
             }
 
         }

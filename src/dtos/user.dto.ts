@@ -55,7 +55,7 @@ export class BakerProfileDto {
 export class UserDto{
     @ApiProperty({})
     @IsNotEmpty({})
-    userName: string;
+    username: string;
   
     @ApiProperty({ })
     @IsEmail()

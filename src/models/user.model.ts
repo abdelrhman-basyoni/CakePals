@@ -61,7 +61,7 @@ export class Profile {
   })
   export class User extends BaseEntity {
     @Prop({ unique: false })
-    userName: string;
+    username: string;
   
     @Prop({ unique: true })
     email: string;

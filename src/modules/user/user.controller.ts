@@ -32,7 +32,7 @@ export class UserController {
             message: messages.success.message,
             code: messages.success.code,
             data: {
-                user: serviceRes
+                item: serviceRes
             }
 
         }
@@ -55,7 +55,7 @@ export class UserController {
             message: messages.success.message,
             code: messages.success.code,
             data: {
-                user: res
+                item: res
             }
 
         }
@@ -90,7 +90,7 @@ export class UserController {
             message: user ? messages.success.message : errors.notFound.message,
             code: user ? messages.success.code : errors.notFound.code,
             data: {
-                user: user
+                item: user
             }
         }
     }
@@ -117,7 +117,7 @@ export class UserController {
             message: user ? messages.success.message : errors.notFound.message,
             code: user ? messages.success.code : errors.notFound.code,
             data: {
-                user: user
+                item: user
             }
         }
     }
@@ -136,7 +136,7 @@ export class UserController {
             message: user ? messages.success.message : errors.notFound.message,
             code: user ? messages.success.code : errors.notFound.code,
             data: {
-                user: user
+                item: user
             }
         }
     }

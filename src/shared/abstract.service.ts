@@ -20,7 +20,7 @@ export abstract class AbstractService < modelDocument> {
 
     async findAll(filter:any,page:number, pageSize:number){
 
-        const [total,products] =  await Promise.all([
+        const [total,items] =  await Promise.all([
             this.count(filter),
             this.findMany(filter,{},{skip:((page-1) *pageSize),limit:pageSize}) 
 
@@ -33,7 +33,7 @@ export abstract class AbstractService < modelDocument> {
             code:messages.success.code,
             data:{
                 total,
-                products
+                items
             }
         }
 

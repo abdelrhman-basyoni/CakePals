@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty,Min,Max,IsIn, IsEmail,IsInt } from 'class-validator'
+import { IsNotEmpty,Min,Max,IsIn, IsEmail,IsInt, IsArray } from 'class-validator'
 import { UserRoles } from "../enums/userRoles.enum";
 
 export class DayTimeDto {
@@ -17,37 +17,42 @@ export class DayTimeDto {
 }
 export class CollectionTimeRangeDto {
     @ApiProperty({ type: () => DayTimeDto })
+    @IsNotEmpty()
     start:DayTimeDto;
 
     @ApiProperty({ type: () => DayTimeDto })
+    @IsNotEmpty()
     end:DayTimeDto;
 }
 
 export class BakerProfileDto {
     @ApiProperty({  })
+    @IsNotEmpty()
     pic: string;
 
     @ApiProperty({  })
+    @IsNotEmpty()
     about: string;
 
-    @ApiProperty({ default:5 })
+    // @ApiProperty({ default:5 })
     rating: number;
 
-    @ApiProperty({ default:1 })
+    // @ApiProperty({ default:1 })
     ratedOrders: number;
 
-    @ApiProperty({  })
+    // @ApiProperty({  })
     totalOrders: number;
 
     @ApiProperty({ type: () => [Number], example: [30.15645132, 30.4576541] })
+    @IsArray()
     location:number[];
 
     @ApiProperty({ type: () => CollectionTimeRangeDto })
+    @IsNotEmpty()
     collectionTimeRange:CollectionTimeRangeDto
 }
 
-
-export class RegisterMemberDto{
+export class UserDto{
     @ApiProperty({})
     @IsNotEmpty({})
     userName: string;
@@ -56,21 +61,28 @@ export class RegisterMemberDto{
     @IsEmail()
     email: string;
   
-  
-    @ApiProperty({  })
-    @IsNotEmpty({})
-    password: string;
-  
 
   
 
     role: UserRoles;
+}
+
+export class RegisterMemberDto extends UserDto {
+    @ApiProperty({  })
+    @IsNotEmpty({})
+    password: string;
   
   
 
 }
 
 export class RegisterBakerDto extends RegisterMemberDto {
+    @ApiProperty({ type:() => BakerProfileDto})
+    @IsNotEmpty()
+    profile: BakerProfileDto;
+}
+
+export class UpdateUserDto extends UserDto {
     @ApiProperty({ type:() => BakerProfileDto})
     profile: BakerProfileDto;
 }

@@ -7,6 +7,10 @@ export const errors = {
         code:1,
         message: "Resource Not Found"
     } ,
+    "duplicateKey":{
+        code:2,
+        message: "this field value already exists "
+    } ,
 }
 
 export const messages = {

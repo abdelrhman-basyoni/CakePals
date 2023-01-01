@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { errors } from './responseCodes';
 // import { getI18nContextFromArgumentsHost } from 'nestjs-i18n';
 // import { isNumber } from './utils';
 export function isNumber(value: string | number): boolean {
@@ -23,7 +24,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     switch (exception.code) {
       case 11000:
         // message = i18n.t('errors.duplicateKey',{args:{fieldName:`${Object.keys(exception.keyValue)}`}});
-        message = `${Object.keys(exception.keyValue)}`;
+        message = errors.duplicateKey.message +`${Object.keys(exception.keyValue)}`;
+        exception.statusCode = 400;
+        exception.errorCode = errors.duplicateKey.code
         break;
       default:
         message = exception['message'];
@@ -42,6 +45,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: status,
       status:false,
       message: exception instanceof String ? exception : exception.response ? exception?.response?.message?.toString() : message?.toString(),
+      code:exception.errorCode ? exception.errorCode : errors.internalServerError.code,
       description: exception.response?.description,
       timestamp: new Date().toISOString(),
       path: request.url,

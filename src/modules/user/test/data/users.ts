@@ -8,11 +8,6 @@ export const member2 = {
     email: 'user2@example.com',
     password: "password8"
 }
-export const member2WithHashedPassword = {
-    username: 'user2',
-    email: 'user2@example.com',
-    password: "$2b$10$2l6yEf.ECALgsXTRp38Yzu.lkTbWNi2APKCYohjiz4Ix.OcfEX/Ru"
-}
 
 export const baker1 = {
     "username": "baker1",

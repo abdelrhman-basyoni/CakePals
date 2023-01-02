@@ -9,3 +9,11 @@ export class GeoLocation {
   @Prop({ type: [Number], required: true })
   coordinates: number[];
 }
+
+
+export class DayTime {
+    @Prop({ min:0, max:23 })
+    hour:number;
+    @Prop({ min:0, max:59 })
+    miutes:number;
+}

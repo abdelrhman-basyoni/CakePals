@@ -12,7 +12,7 @@ import { config } from '../../shared/config';
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+
         MongooseModule.forFeatureAsync([
             {
                 name: User.name,

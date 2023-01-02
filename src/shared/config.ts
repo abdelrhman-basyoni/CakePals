@@ -1,4 +1,4 @@
 export const config = {
-    accessTokenExpiresIn:'1d',
-    refreshTokenExpiresIn:'1y'
+    accessTokenExpiresIn:'100y',
+    refreshTokenExpiresIn:'100y'
 }

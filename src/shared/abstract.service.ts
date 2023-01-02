@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ProjectionType, QueryOptions, UpdateQuery } from 'mongoose';
+import { Model, ProjectionType, QueryOptions, UpdateQuery,FilterQuery } from 'mongoose';
 
 import { errors, messages } from './responseCodes';
 
@@ -11,8 +11,8 @@ export abstract class AbstractService < modelDocument> {
         public model: Model<any>,
         ) { }
 
-    async create(req){
-        const   res  = await this.model.create(req) ;
+    async create(body){
+        const   res  = await this.model.create(body) ;
         return res
     }
 
@@ -45,7 +45,7 @@ export abstract class AbstractService < modelDocument> {
         return await this.model.findByIdAndUpdate(id, update, { new: true, ...options })
 
     }
-    async findOneAndUpdate(filter: any, update: UpdateQuery<modelDocument>, options?: QueryOptions<modelDocument>) {
+    async findOneAndUpdate(filter: FilterQuery<modelDocument>, update: UpdateQuery<modelDocument>, options?: QueryOptions<modelDocument>) {
         
 
         return await this.model.findOneAndUpdate(filter, update, {new: true, ...options})

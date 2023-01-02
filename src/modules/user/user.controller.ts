@@ -84,7 +84,7 @@ export class UserController {
     @ApiBearerAuth()
     @Get('/findOne/:id')
     async findOne(@Param('id') id: string): Promise<ResponseDto> {
-        const user = await this.service.findOne(id);
+        const user = await this.service.findOneById(id);
         return {
             success: user ? true : false,
             message: user ? messages.success.message : errors.notFound.message,

@@ -26,7 +26,7 @@ export class UserService extends AbstractService<UserDocument> {
     }
 
     async login(body: LoginDto) {
-        const user = await this.findOne({ email: body.email }, { password: 1, username: 1, role: 1 })
+        const user = await this.findOne({ email: body.email }, { password: 1, username: 1,email: 1, role: 1 })
         if (!user) {
             throw new UnauthorizedException('invalid user');
         }

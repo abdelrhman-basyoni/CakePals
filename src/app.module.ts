@@ -6,8 +6,10 @@ import { MongooseModule, getConnectionToken } from '@nestjs/mongoose';
 import { UserModule } from './modules/user/user.module';
 import { Connection, createConnection } from 'mongoose';
 import { DatabaseModule } from './database/database.module';
+import { CakeModule } from './modules/cake/cake.module';
 const appModules = [
   UserModule,
+  CakeModule
   
 ]
 let dbName = process.env.DB_NAME;

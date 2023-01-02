@@ -5,14 +5,8 @@ import { Document } from 'mongoose';
 import { UserRoles } from '../enums/userRoles.enum';
 import { BaseEntity } from './baseEntity.model';
 import * as bcrypt from 'bcrypt';
-import { GeoLocation } from './geoLocation';
+import { GeoLocation, DayTime } from './shared';
 export type UserDocument = User & Document;
-export class DayTime {
-    @Prop({ min:0, max:23 })
-    hour:number;
-    @Prop({ min:0, max:59 })
-    miutes:number;
-}
 
 
 export class CollectionTimeRange{

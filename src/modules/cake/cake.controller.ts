@@ -89,11 +89,11 @@ export class CakeController {
     @Query('location') location:string,@Query('caketype') cakeType: string) {
         const formatedLocation :[number,number] = JSON.parse(location);
 
- 
+        
         if(!cakeType || !location){
             throw new BadRequestException()
         }
-        if( !Array.isArray(formatedLocation) || formatedLocation.length == 2){
+        if( !Array.isArray(formatedLocation) || formatedLocation.length != 2){
             throw new BadRequestException('invalid location format')
         }
  

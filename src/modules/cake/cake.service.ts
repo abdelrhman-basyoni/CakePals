@@ -72,12 +72,11 @@ export class CakeService extends AbstractService<CakeDocument> {
                 }
             }
         ]
-        console.log(filterPipeline[0]['$geoNear'])
-        const cakes = await this.userService.aggregate(filterPipeline)
-        console.log({cakes})
-        const allCakes = cakes[0]?.cakes || [];
 
-        return allCakes;
+        const bakers = await this.userService.aggregate(filterPipeline)
+       
+
+        return bakers || [];
     }
 
 }

@@ -20,7 +20,7 @@ export class CakeService extends AbstractService<CakeDocument> {
 
     async filterCakes(location:[number,number],cakeType:string){
         const filterPipeline : PipelineStage []= findCakesByRadiusAndType(location,cakeType)
-        console.log(location,cakeType)
+   
         const   test:any[] =   [
             {
                 '$geoNear': {

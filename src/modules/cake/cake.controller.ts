@@ -87,10 +87,14 @@ export class CakeController {
     @Get('/filterCake')
     async filterCakes(
     @Query('location') location:string,@Query('caketype') cakeType: string) {
-        const formatedLocation :[number,number] = JSON.parse(location)
-        console.log(location)
+        const formatedLocation :[number,number] = JSON.parse(location);
+
+ 
         if(!cakeType || !location){
             throw new BadRequestException()
+        }
+        if( !Array.isArray(formatedLocation) || formatedLocation.length == 2){
+            throw new BadRequestException('invalid location format')
         }
  
         const cakes =  await this.service.filterCakes(formatedLocation,cakeType);

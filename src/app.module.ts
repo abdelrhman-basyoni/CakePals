@@ -7,15 +7,15 @@ import { UserModule } from './modules/user/user.module';
 import { Connection, createConnection } from 'mongoose';
 import { DatabaseModule } from './database/database.module';
 import { CakeModule } from './modules/cake/cake.module';
+import { OrderModule } from './modules/order/order.module';
+import { CakeTypeModule } from './modules/cakeType/cakeType.module';
 const appModules = [
   UserModule,
-  CakeModule
+  CakeModule,
+  OrderModule,
+  CakeTypeModule
   
 ]
-let dbName = process.env.DB_NAME;
-if (process.env.NODE_ENV == 'Test') {
-  dbName = 'cakeTest'
-}
 
 @Module({
   imports: [

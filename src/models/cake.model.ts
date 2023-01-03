@@ -40,7 +40,7 @@ export class Cake extends BaseEntity {
   cakeType: string
 
 
-  @Prop({ type: Types.ObjectId, ref: User.name })
+  @Prop({ type: Types.ObjectId, ref: User.name,required:true })
   baker:User
 
 

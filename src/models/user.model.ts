@@ -84,4 +84,5 @@ export class Profile {
   }
 export const UserSchema = SchemaFactory.createForClass(User);
 
+UserSchema.index({ 'profile.location': '2dsphere' });
 UserSchema.loadClass(User);

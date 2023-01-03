@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ProjectionType, QueryOptions, UpdateQuery,FilterQuery } from 'mongoose';
+import { Model, ProjectionType, QueryOptions, UpdateQuery,FilterQuery,PipelineStage, AggregateOptions } from 'mongoose';
 
 import { errors, messages } from './responseCodes';
 
@@ -10,9 +10,13 @@ export abstract class AbstractService < modelDocument> {
     constructor(
         public model: Model<any>,
         ) { }
-
+        
     async create(body){
         const   res  = await this.model.create(body) ;
+        return res
+    }
+    async createWithSession(body,session){
+        const   res  = await this.model.create([body],{session}) ;
         return res
     }
 
@@ -77,6 +81,10 @@ export abstract class AbstractService < modelDocument> {
     }
     async count(filter?: any) {
         return await this.model.count(filter);
+    }
+
+    async aggregate(pipeline: PipelineStage[],options?:AggregateOptions){
+        return await this.model.aggregate(pipeline,options)
     }
 
 }

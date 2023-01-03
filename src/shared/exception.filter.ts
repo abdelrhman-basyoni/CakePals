@@ -18,7 +18,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
     // const i18n = getI18nContextFromArgumentsHost(host);
-
+    console.log(exception.message)
     /** mongodb dublicat key error handler */
     let message = "";
     switch (exception.code) {

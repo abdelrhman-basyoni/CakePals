@@ -1,3 +1,5 @@
+import { CakeDto } from "../../../../dtos/cake.dto"
+
 export const cakeBaker = {
     "username": "baker",
     "email": "baker1@email.com",
@@ -26,7 +28,7 @@ export const cakeBaker = {
     "__v": 0
 }
 
-export const cake1 = {
+export const cake1:CakeDto = {
     "title": "first cake",
     "description": "best cake in town",
     "price": 100,
@@ -34,7 +36,7 @@ export const cake1 = {
       "hour": 2,
       "miutes": 0
     },
-    "type": "meat Pie"
+    "cakeType": "meat Pie"
   }
 
 

@@ -26,7 +26,7 @@ export class CollectionTimeRangeDto {
 }
 
 export class BakerProfileDto {
-    @ApiProperty({  })
+    @ApiProperty({ example:'https://www.mona.uwi.edu/modlang/sites/default/files/modlang/male-avatar-placeholder.png'})
     @IsNotEmpty()
     pic: string;
 

@@ -1,5 +1,5 @@
-import { Controller, UseGuards, Post, Body, Get, Param, Put, Delete, Query, Req, NotFoundException } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, UseGuards, Post, Body, Get, Param, Put, Delete, Query, Req, NotFoundException, BadRequestException } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
 import { LoginDto } from '../../dtos/login.dto';
 import { ResponseDto } from '../../dtos/response.dto';
@@ -13,28 +13,60 @@ import { errors, messages } from '../../shared/responseCodes';
 
 import { UserRoles } from '../../enums/userRoles.enum';
 import { CakeDto } from '../../dtos/cake.dto';
-import { create } from 'domain';
-import { Type } from 'class-transformer';
 
+import { CakeTypeService } from '../cakeType/cakeType.service';
+import mongoose from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
+import { locationQuery } from '../../dtos/locationQuery.dto';
+// const connection = new mongoose.Connection()
 @ApiTags('Cake')
 @Controller('Cake')
 export class CakeController {
 
-    constructor(private service: CakeService) { }
+    constructor(
+        private service: CakeService,
+        private cakeTypeService: CakeTypeService,
+        @InjectConnection()private  readonly connection: mongoose.Connection
+
+    ) { }
     /* POST Cake End Point */
 
 
     @Post('create')
     @Role([UserRoles.baker])
     async create(@Body() body: CakeDto, @Req() req: any) {
+        /**
+         * check if the cake exist or not if existes create new one 
+         * 
+         */
+
         body.baker = new Types.ObjectId(req.user._id)
-        const item = await this.service.create(body);
+        const session = await this.connection.startSession();
+        let cakeType, item;
+       
+        await session.withTransaction(async () => {
+            [cakeType, item] = await Promise.all([
+                this.cakeTypeService.findOneAndUpdate({ name: body.cakeType }, { name: body.cakeType }, { upsert: true, session }),
+                this.service.createWithSession(body,session)
+            ])
+
+            if (!cakeType || !item[0]) {
+                throw new BadRequestException('');
+
+
+            }
+
+
+            return;
+        });
+        await session.endSession();
+  
         return {
-            success: item ? true : false,
-            message: item ? messages.success.message : errors.notFound.message,
-            code: item ? messages.success.code : errors.notFound.code,
+            success:  true ,
+            message: messages.success.message ,
+            code: messages.success.code ,
             data: {
-                item: item
+                item: item[0]
             }
         }
 
@@ -50,6 +82,27 @@ export class CakeController {
     getAll(@Query('pagesize') pageSize: number, @Query('page') page: number,) {
         return this.service.findAll({}, page || 1, pageSize || 20);
     }
+    @ApiBearerAuth()
+    @ApiQuery({name: 'location',example:'[30.15645132, 30.4576541]'})
+    @Get('/filterCake')
+    async filterCakes(
+    @Query('location') location:string,@Query('caketype') cakeType: string) {
+        const formatedLocation :[number,number] = JSON.parse(location)
+        console.log(location)
+        if(!cakeType || !location){
+            throw new BadRequestException()
+        }
+ 
+        const cakes =  await this.service.filterCakes(formatedLocation,cakeType);
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                items: cakes
+            }
+        }
+    }
 
 
 
@@ -58,14 +111,14 @@ export class CakeController {
     @Get('/findOne/:id')
     async findOne(@Param('id') id: string): Promise<ResponseDto> {
         const cake = await this.service.findOneById(id);
-        if(!cake){
+        if (!cake) {
             throw new NotFoundException('resource not found')
         }
 
         return {
-            success:   true ,
-            message:  messages.success.message ,
-            code:  messages.success.code ,
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
             data: {
                 item: cake
             }
@@ -83,18 +136,37 @@ export class CakeController {
          * the one that can change it for now should be the cake owner
         */
         const bakerId = new Types.ObjectId(req.user._id)
-        const cake = await this.service.findOneAndUpdate({
-            _id: new Types.ObjectId(id),
-            baker: bakerId
-        }, body);
+        const session = await this.connection.startSession();
+        let cake, item;
 
-        if(!cake){
+        await session.withTransaction(async () => {
+            [cake, item] = await Promise.all([
+                this.cakeTypeService.findOneAndUpdate({ name: body.cakeType }, { name: body.cakeType }, { upsert: true, session }),
+                this.service.findOneAndUpdate({
+                    _id: new Types.ObjectId(id),
+                    baker: bakerId
+                }, body,{session})
+            ])
+
+            if (!cake || !item[0]) {
+                throw new BadRequestException();
+
+
+            }
+
+
+            return;
+        });
+        await session.endSession();
+    
+
+        if (!cake) {
             throw new NotFoundException('resource not found')
         }
         return {
-            success:   true ,
-            message:  messages.success.message ,
-            code:  messages.success.code ,
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
             data: {
                 item: cake
             }
@@ -117,13 +189,13 @@ export class CakeController {
             _id: new Types.ObjectId(id),
             baker: bakerId
         })
-        if(!cake){
+        if (!cake) {
             throw new NotFoundException('resource not found')
         }
         return {
-            success:   true ,
-            message:  messages.success.message ,
-            code:  messages.success.code ,
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
             data: {
                 item: cake
             }

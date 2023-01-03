@@ -52,7 +52,8 @@ describe('cake controller basic endpoints  (e2e)', () => {
 
 
         it('create new cake valid', async () => {
-
+            /** clear types */
+            await dbConnection.collection('caketypes').deleteMany({});
             const res = await request(httpServer)
                 .post('/cake/create')
                 .set({

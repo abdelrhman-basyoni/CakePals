@@ -38,10 +38,10 @@ export class CakeDto extends BaseEntityDto {
     bakingTime:cakeTimeDto;
 
 
-    @ApiProperty({required:true})
+    @ApiProperty({required:true,example:'honeyPie'})
     @IsNotEmpty()
     @IsString()
-    type:string
+    cakeType:string
   
-    baker:any
+    baker?:any
 }

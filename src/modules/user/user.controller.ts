@@ -11,7 +11,7 @@ import { UserService } from './user.service';
 import { BadRequestException } from '@nestjs/common';
 import { errors, messages } from '../../shared/responseCodes';
 import { UserRoles } from '../../enums/userRoles.enum';
-
+import { GeoLocation } from '../../models/shared'
 @ApiTags('User')
 @Controller('User')
 export class UserController {
@@ -23,9 +23,9 @@ export class UserController {
     @Post('/register-member')
     // @HttpCode(HttpStatus.CREATED)
     async signUp(@Body() body: RegisterMemberDto): Promise<ResponseDto> {
-      
+
         body.role = UserRoles.member
-        
+
         const serviceRes = await this.service.create(body)
         return {
             success: true,
@@ -42,14 +42,20 @@ export class UserController {
     }
     @Post('/register-baker')
     async bakerRegister(@Body() body: RegisterBakerDto): Promise<ResponseDto> {
-   
-        /** validate if the the collection time range bigger than the start + 6 hours */
+
+        /** validate if the the collection time range bigger than the start + 6 hours
+         * c
+         */
         if (body.profile.collectionTimeRange.end.hour < (body.profile.collectionTimeRange.start.hour + 6)) {
             throw new BadRequestException('invalid request')
         }
         body.role = UserRoles.baker
+        const location = {
+            type: "Point",
+            coordinates: body.profile.location
+        }
 
-        const res = await this.service.create(body)
+        const res = await this.service.create({ ...body, profile: {...body.profile, location: location } })
         return {
             success: true,
             message: messages.success.message,

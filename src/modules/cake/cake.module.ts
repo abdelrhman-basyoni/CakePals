@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 
 import { config } from '../../shared/config';
+import { CakeTypeModule } from '../cakeType/cakeType.module';
+import { UserModule } from '../user/user.module';
 
 
 @Module({
@@ -21,8 +23,11 @@ import { config } from '../../shared/config';
                 },
             },
         ]),
+        CakeTypeModule,
+        UserModule
 
     ],
+
     controllers: [CakeController],
     providers: [CakeService],
     exports: [CakeService]

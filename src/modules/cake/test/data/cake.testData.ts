@@ -28,12 +28,12 @@ export const cakeBaker = {
     "__v": 0
 }
 
-export const cake1:CakeDto = {
+export const cake1 = {
     "title": "first cake",
     "description": "best cake in town",
     "price": 100,
     "bakingTime": {
-      "hour": 2,
+      "hours": 2,
       "miutes": 0
     },
     "cakeType": "meat Pie"

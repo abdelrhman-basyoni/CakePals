@@ -7,7 +7,7 @@ export class cakeTimeDto extends DayTimeDto {
     @IsInt()
     @Min(0)
     @Max(4)
-    hour:number;
+    hours:number;
 
     @ApiProperty({  })
     @IsInt()

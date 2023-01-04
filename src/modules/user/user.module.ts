@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from '../../guards/jwt.strategy';
 import { config } from '../../shared/config';
+import { CakeModule } from '../cake/cake.module';
+import { OrderModule } from '../order/order.module';
 
 
 @Module({
@@ -29,6 +31,10 @@ import { config } from '../../shared/config';
               }),
 
         }),
+
+        forwardRef(() => CakeModule),
+        forwardRef(() => OrderModule),
+        
     ],
     controllers: [UserController],
     providers: [UserService,JwtStrategy],

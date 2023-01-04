@@ -86,3 +86,8 @@ export class UpdateUserDto extends UserDto {
     @ApiProperty({ type:() => BakerProfileDto})
     profile: BakerProfileDto;
 }
+
+export type Period = {
+    start: number;
+    end: number;
+}

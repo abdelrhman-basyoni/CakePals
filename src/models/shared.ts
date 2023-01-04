@@ -13,7 +13,7 @@ export class GeoLocation {
 
 export class DayTime {
     @Prop({ min:0, max:23 })
-    hour:number;
+    hours:number;
     @Prop({ min:0, max:59 })
     miutes:number;
 }

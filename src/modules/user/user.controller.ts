@@ -55,7 +55,7 @@ export class UserController {
             coordinates: body.profile.location
         }
 
-        const res = await this.service.create({ ...body, profile: {...body.profile, location: location } })
+        const res = await this.service.create({ ...body, profile: { ...body.profile, location: location } })
         return {
             success: true,
             message: messages.success.message,
@@ -146,6 +146,24 @@ export class UserController {
             }
         }
     }
+
+
+    @Get('/getAvailableCollectingTimes/:id')
+    async getAvailabilities(@Param('id') bakerId: string, @Query('cake') cakeId: string) {
+
+        const times = await this.service.getAvailableCollectingTimes(bakerId, cakeId)
+
+
+        return {
+            success: true ,
+            message:  messages.success.message ,
+            code: messages.success.code ,
+            data: {
+                items: times
+            }
+        }
+
+    }
     /* End of User Controller Class 
    */
-}
+}   

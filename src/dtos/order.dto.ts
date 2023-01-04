@@ -1,28 +1,23 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsIn, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Types } from 'mongoose'
+import { HotOrNot } from "../enums/order.enum";
 import { CakeDto } from "./cake.dto";
 export class CreateOrderDto {
 
-    @ApiProperty({ type: Types.ObjectId, required: true })
-    @IsString()
-    member: any;
+    // @ApiProperty({ type: Types.ObjectId, required: true })
+    // @IsString()
+    member?: any;
 
 
-
-    @ApiProperty({type: () => CakeDto, required: true})
-    @IsNotEmpty()
-    cake:CakeDto;
 
     @ApiProperty({})
     @IsNotEmpty()
-    @IsNumber()
-    bakingStartTime: number;
+    cake:string;
 
-    @ApiProperty({})
-    @IsNotEmpty()
-    @IsNumber()
-    bakingEndTime: number;
+    @ApiProperty({enum:[HotOrNot.hot,HotOrNot.not],examples:[HotOrNot.hot,HotOrNot.not] })
+    @IsIn([HotOrNot.hot,HotOrNot.not])
+    hotOrNot:string
 
     @ApiProperty({})
     @IsNotEmpty()

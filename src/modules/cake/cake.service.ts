@@ -1,7 +1,7 @@
 import { Cake, CakeDocument } from "../../models/cake.model";
 import { Model, UpdateQuery, QueryOptions } from "mongoose";
 import { AbstractService } from "../../shared/abstract.service";
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { messages } from "../../shared/responseCodes";
 import { InjectModel } from "@nestjs/mongoose";
@@ -13,7 +13,11 @@ import { PipelineStage } from 'mongoose'
 export class CakeService extends AbstractService<CakeDocument> {
     constructor(
         @InjectModel(Cake.name) private CakeModel: Model<CakeDocument>,
+        @Inject(forwardRef(() => UserService))
         private userService: UserService
+
+
+
     ) {
         super(CakeModel);
     }

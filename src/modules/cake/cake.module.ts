@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CakeService } from './cake.service';
 import { CakeController } from './cake.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -24,7 +24,7 @@ import { UserModule } from '../user/user.module';
             },
         ]),
         CakeTypeModule,
-        UserModule
+        forwardRef(() => UserModule)
 
     ],
 

@@ -3,6 +3,7 @@ import { BaseEntity } from "./baseEntity.model";
 import { User } from "./user.model";
 import { Types } from "mongoose"
 import { Cake } from "./cake.model";
+import { OrderStatus } from "../enums/order.enum";
 export type OrderDocument = Order & Document;
 @Schema({
     autoIndex: true,
@@ -18,8 +19,8 @@ export class Order extends BaseEntity {
 
 
 
-    @Prop({type: () => Cake, required: true})
-    cake:Cake;
+    @Prop({ type: () => Cake, required: true })
+    cake: Cake;
 
     @Prop({})
     bakingStartTime: number;
@@ -29,6 +30,14 @@ export class Order extends BaseEntity {
 
     @Prop({})
     collectionTime: number;
+
+    @Prop({
+        enum: OrderStatus,
+        type: String,
+        default: OrderStatus.pending
+    })
+    status: OrderStatus;
+
 
 
 

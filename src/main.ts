@@ -7,7 +7,7 @@ async function bootstrap() {
   const appName = "cake-pals"
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  app.useGlobalPipes(new ValidationPipe({whitelist:true, stopAtFirstError:true}));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, stopAtFirstError: true }));
   app.useGlobalFilters(new AllExceptionsFilter());
 
 
@@ -17,7 +17,9 @@ async function bootstrap() {
     .setTitle(appName)
     .setDescription(`${appName} Docs`)
     .setVersion('1.0')
-    .addSecurity('Authorization', { type: 'http', bearerFormat: 'Bearer ' })
+    .addBearerAuth()
+    .addSecurityRequirements('bearer')
+    // .addSecurity('Authorization', { type: 'http', bearerFormat: 'Bearer ' })
     .build();
 
   const doc = SwaggerModule.createDocument(app, opt, {

@@ -176,7 +176,8 @@ export class OrderController {
         }
 
     }
-
+    
+    @ApiBearerAuth()
     @Role([UserRoles.member])
     @Post('/rateOrder/id')
     async rateOrder(@Param('id') orderId: string, @Body() body: RateOrderDto, @Req() req: any) {

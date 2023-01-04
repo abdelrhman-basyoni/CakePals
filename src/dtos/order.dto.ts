@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsIn, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Types } from 'mongoose'
-import { HotOrNot } from "../enums/order.enum";
+import { HotOrNot, OrderStatus } from "../enums/order.enum";
 import { CakeDto } from "./cake.dto";
 export class CreateOrderDto {
 
@@ -24,4 +24,10 @@ export class CreateOrderDto {
     @IsNumber()
     collectionTime: number;
 
+}
+
+export class RespondToOrderDto {
+    @ApiProperty({enum:[OrderStatus.accepted,OrderStatus.rejected],examples:[OrderStatus.accepted,OrderStatus.rejected]})
+    @IsIn([OrderStatus.accepted,OrderStatus.rejected])
+    response:string
 }

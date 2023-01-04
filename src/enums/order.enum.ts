@@ -1,7 +1,8 @@
 export enum OrderStatus {
     pending = 'pending',
     accepted = 'accepted',
-    rejected = 'rejected'
+    rejected = 'rejected',
+    collected = 'collected'
 }
 
 export enum HotOrNot { 

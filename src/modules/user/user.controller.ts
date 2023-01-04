@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Post, Body, Get, Param, Put, Delete, Query, Req, Res, HttpStatus, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-
+import { Types } from 'mongoose'
 import { LoginDto } from '../../dtos/login.dto';
 import { ResponseDto } from '../../dtos/response.dto';
 import { RegisterBakerDto, RegisterMemberDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
@@ -95,6 +95,28 @@ export class UserController {
             success: user ? true : false,
             message: user ? messages.success.message : errors.notFound.message,
             code: user ? messages.success.code : errors.notFound.code,
+            data: {
+                item: user
+            }
+        }
+    }
+
+    @Get('/bakerProfile/:id')
+    async findBakerProfile(@Param('id') id: string): Promise<ResponseDto> {
+        const user = await this.service.findOne({
+            _id : new Types.ObjectId(id),
+            role : UserRoles.baker
+        },{
+            username:1,
+            profile:1
+        });
+        if(!user){
+            throw new BadRequestException(errors.notFound,'invalid')
+        }
+        return {
+            success: true,
+            message: messages.success.message,
+            code:messages.success.code ,
             data: {
                 item: user
             }

@@ -15,7 +15,7 @@ import { UserRoles } from '../../enums/userRoles.enum';
 // import { OrderDto } from '../../dtos/order.dto';
 import { create } from 'domain';
 import { Type } from 'class-transformer';
-import { CreateOrderDto } from '../../dtos/order.dto';
+import { CreateOrderDto, RespondToOrderDto } from '../../dtos/order.dto';
 import { UserService } from '../user/user.service';
 import { CakeService } from '../cake/cake.service';
 import { addTime, getRawTime } from '../../shared/utils';
@@ -83,19 +83,98 @@ export class OrderController {
             message: messages.success.message,
             code: messages.success.code,
             data: {
-                items: order
+                item: order
             }
+        }
+    }
+
+
+    @ApiBearerAuth()
+    @Get('/findOne/:id')
+    @Role([UserRoles.member, UserRoles.baker])
+    async findOne(@Param('id') id: string): Promise<ResponseDto> {
+        const order = await this.service.findOneById(id);
+        if (!order) {
+            throw new BadRequestException({ code: errors.notFound }, 'invalid order')
+        }
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                item: order
+            }
+
         }
     }
 
     /* GET All  End Point */
     @ApiBearerAuth()
+    @Role([UserRoles.admin])
     @Get('/getAll')
     getAll(@Query('pagesize') pageSize: number, @Query('page') page: number,) {
         return this.service.findAll({}, page || 1, pageSize || 200);
     }
+    @ApiBearerAuth()
+    @Get('/getMyOrders')
+    @Role([UserRoles.member, UserRoles.baker])
+    getMyOrders(@Query('pagesize') pageSize: number, @Query('page') page: number, @Req() req: any) {
+        const userId = new Types.ObjectId(req.user._id);
+        return this.service.findAll({
+            $or: [
+                { member: userId },
+                { 'cake.baker': userId }
+            ]
 
+        }, page || 1, pageSize || 200);
+    }
 
+    @Role([UserRoles.baker])
+    @Post('/respondToOrders/id')
+    async acceptOrRejectOrder(@Param('id') ordeId: string, @Body() body: RespondToOrderDto, string, @Req() req: any) {
+        const order = await this.service.findOneAndUpdate({
+            _id: new Types.ObjectId(ordeId),
+            'cake.baker': new Types.ObjectId(req.user._id)
+        }, {
+            status: body.response
+        })
+        if (!order) {
+            throw new BadRequestException({ code: errors.notFound }, 'invalid order')
+        }
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                item: order
+            }
+
+        }
+
+    }
+    @Role([UserRoles.baker])
+    @Post('/respondToOrders/id')
+    async collectOrder(@Param('id') ordeId: string, @Body() body: RespondToOrderDto, string, @Req() req: any) {
+        const order = await this.service.findOneAndUpdate({
+            _id: new Types.ObjectId(ordeId),
+            'cake.baker': new Types.ObjectId(req.user._id)
+        }, {
+            status: body.response
+        })
+        if (!order) {
+            throw new BadRequestException({ code: errors.notFound }, 'invalid order')
+        }
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                item: order
+            }
+
+        }
+
+    }
 
 
     /* End of Order Controller Class 

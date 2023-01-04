@@ -22,7 +22,7 @@ export abstract class AbstractService<modelDocument> {
 
 
 
-    async findAll(filter: any, page: number, pageSize: number) {
+    async findAll(filter: FilterQuery<modelDocument>, page: number, pageSize: number)  {
 
         const [total, items] = await Promise.all([
             this.count(filter),
@@ -49,7 +49,7 @@ export abstract class AbstractService<modelDocument> {
         return await this.model.findByIdAndUpdate(id, update, { new: true, ...options })
 
     }
-    async findOneAndUpdate(filter: FilterQuery<modelDocument>, update: UpdateQuery<modelDocument>, options?: QueryOptions<modelDocument>) {
+    async findOneAndUpdate(filter: FilterQuery<modelDocument>, update: UpdateQuery<modelDocument>, options?: QueryOptions<modelDocument>): Promise<modelDocument> {
 
 
         return await this.model.findOneAndUpdate(filter, update, { new: true, ...options })
@@ -60,11 +60,11 @@ export abstract class AbstractService<modelDocument> {
         return this.model.findById(id, projection, options);
     }
 
-    async findOne(filter: any, projection?: ProjectionType<modelDocument>, options?: QueryOptions<modelDocument>): Promise<modelDocument> {
+    async findOne(filter: FilterQuery<modelDocument>, projection?: ProjectionType<modelDocument>, options?: QueryOptions<modelDocument>): Promise<modelDocument> {
         return this.model.findOne(filter, projection, options);
     }
 
-    async findMany(filter?: FilterQuery<modelDocument>, projection?: ProjectionType<modelDocument>, options?: QueryOptions<modelDocument>): Promise<modelDocument[]> {
+    async findMany(filter: FilterQuery<modelDocument>, projection?: ProjectionType<modelDocument>, options?: QueryOptions<modelDocument>): Promise<modelDocument[]> {
 
         return this.model.find(filter, projection, options);
     }

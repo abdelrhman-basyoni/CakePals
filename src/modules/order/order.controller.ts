@@ -15,11 +15,11 @@ import { UserRoles } from '../../enums/userRoles.enum';
 // import { OrderDto } from '../../dtos/order.dto';
 import { create } from 'domain';
 import { Type } from 'class-transformer';
-import { CreateOrderDto, RespondToOrderDto } from '../../dtos/order.dto';
+import { CollectOrderDto, CreateOrderDto, RateOrderDto, RespondToOrderDto } from '../../dtos/order.dto';
 import { UserService } from '../user/user.service';
 import { CakeService } from '../cake/cake.service';
 import { addTime, getRawTime } from '../../shared/utils';
-import { HotOrNot } from '../../enums/order.enum';
+import { HotOrNot, OrderStatus } from '../../enums/order.enum';
 import { config } from '../../shared/config';
 
 @ApiTags('Order')
@@ -131,7 +131,7 @@ export class OrderController {
 
     @Role([UserRoles.baker])
     @Post('/respondToOrders/id')
-    async acceptOrRejectOrder(@Param('id') ordeId: string, @Body() body: RespondToOrderDto, string, @Req() req: any) {
+    async acceptOrRejectOrder(@Param('id') ordeId: string, @Body() body: RespondToOrderDto, @Req() req: any) {
         const order = await this.service.findOneAndUpdate({
             _id: new Types.ObjectId(ordeId),
             'cake.baker': new Types.ObjectId(req.user._id)
@@ -153,17 +153,40 @@ export class OrderController {
 
     }
     @Role([UserRoles.baker])
-    @Post('/respondToOrders/id')
-    async collectOrder(@Param('id') ordeId: string, @Body() body: RespondToOrderDto, string, @Req() req: any) {
+    @Post('/collectOrder/id')
+    async collectOrder(@Param('id') ordeId: string, @Body() body: CollectOrderDto, @Req() req: any) {
         const order = await this.service.findOneAndUpdate({
             _id: new Types.ObjectId(ordeId),
-            'cake.baker': new Types.ObjectId(req.user._id)
+            'cake.baker': new Types.ObjectId(req.user._id),
+            collectionCode: body.code
         }, {
-            status: body.response
+            status: OrderStatus.collected
         })
         if (!order) {
-            throw new BadRequestException({ code: errors.notFound }, 'invalid order')
+            throw new BadRequestException(errors.notFound, 'invalid order')
         }
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                item: order
+            }
+
+        }
+
+    }
+
+    @Role([UserRoles.member])
+    @Post('/rateOrder/id')
+    async rateOrder(@Param('id') orderId: string, @Body() body: RateOrderDto, @Req() req: any) {
+
+
+        const order = this.service.rateOrder(orderId, body.rate, req.user._id)
+        if (!order) {
+            throw new BadRequestException(errors.notFound)
+        }
+
         return {
             success: true,
             message: messages.success.message,

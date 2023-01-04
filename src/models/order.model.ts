@@ -5,6 +5,7 @@ import { Types } from "mongoose"
 import { Cake } from "./cake.model";
 import { OrderStatus } from "../enums/order.enum";
 export type OrderDocument = Order & Document;
+
 @Schema({
     autoIndex: true,
     timestamps: {
@@ -25,11 +26,17 @@ export class Order extends BaseEntity {
     @Prop({})
     bakingStartTime: number;
 
+    @Prop({max:5,min:1})
+    rate?: number;
+
     @Prop({})
     bakingEndTime: number;
 
     @Prop({})
     collectionTime: number;
+
+    @Prop({})
+    collectionCode?: number;
 
     @Prop({
         enum: OrderStatus,
@@ -38,10 +45,9 @@ export class Order extends BaseEntity {
     })
     status: OrderStatus;
 
-
-
-
 }
+
+
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
 

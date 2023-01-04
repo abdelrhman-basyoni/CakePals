@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsIn, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsIn, IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
 import { Types } from 'mongoose'
 import { HotOrNot, OrderStatus } from "../enums/order.enum";
 import { CakeDto } from "./cake.dto";
@@ -13,11 +13,11 @@ export class CreateOrderDto {
 
     @ApiProperty({})
     @IsNotEmpty()
-    cake:string;
+    cake: string;
 
-    @ApiProperty({enum:[HotOrNot.hot,HotOrNot.not],examples:[HotOrNot.hot,HotOrNot.not] })
-    @IsIn([HotOrNot.hot,HotOrNot.not])
-    hotOrNot:string
+    @ApiProperty({ enum: [HotOrNot.hot, HotOrNot.not], examples: [HotOrNot.hot, HotOrNot.not] })
+    @IsIn([HotOrNot.hot, HotOrNot.not])
+    hotOrNot: string
 
     @ApiProperty({})
     @IsNotEmpty()
@@ -27,7 +27,19 @@ export class CreateOrderDto {
 }
 
 export class RespondToOrderDto {
-    @ApiProperty({enum:[OrderStatus.accepted,OrderStatus.rejected],examples:[OrderStatus.accepted,OrderStatus.rejected]})
-    @IsIn([OrderStatus.accepted,OrderStatus.rejected])
-    response:string
+    @ApiProperty({ enum: [OrderStatus.accepted, OrderStatus.rejected], examples: [OrderStatus.accepted, OrderStatus.rejected] })
+    @IsIn([OrderStatus.accepted, OrderStatus.rejected])
+    response: string
+}
+export class CollectOrderDto {
+    @ApiProperty({  })
+    @IsNumber()
+    code: number;
+}
+export class RateOrderDto {
+    @ApiProperty({  })
+    @IsNumber()
+    @Min(1)
+    @Min(5)
+    rate: number;
 }

@@ -24,7 +24,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     switch (exception.code) {
       case 11000:
         // message = i18n.t('errors.duplicateKey',{args:{fieldName:`${Object.keys(exception.keyValue)}`}});
-        message = errors.duplicateKey.message +`${Object.keys(exception.keyValue)}`;
+        message = errors.duplicateKey.message + `${Object.keys(exception.keyValue)}`;
         exception.statusCode = 400;
         exception.errorCode = errors.duplicateKey.code
         break;
@@ -43,9 +43,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const res = {
       statusCode: status,
-      status:false,
+      status: false,
       message: exception instanceof String ? exception : exception.response ? exception?.response?.message?.toString() : message?.toString(),
-      code:exception.response.code ? exception.response.code : errors.internalServerError.code,
+      code: exception.response.code ? exception.response.code : errors.internalServerError.code,
       description: exception.response?.description,
       timestamp: new Date().toISOString(),
       path: request.url,

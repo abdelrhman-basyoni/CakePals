@@ -34,14 +34,14 @@ export class Cake extends BaseEntity {
   bakingTime: DayTime;
 
 
- 
+
 
   @Prop({ required: true })
   cakeType: string
 
 
-  @Prop({ type: Types.ObjectId, ref: User.name,required:true })
-  baker:User
+  @Prop({ type: Types.ObjectId, ref: User.name, required: true })
+  baker: Types.ObjectId
 
 
 

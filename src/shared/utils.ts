@@ -73,3 +73,9 @@ export function getRawTime(hours: number, minutes: number) {
 
     return Number(hours+minutes)
 }
+
+export function generateUniqueCode(): number {
+    let code = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
+
+    return code;
+  }

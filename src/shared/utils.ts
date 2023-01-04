@@ -61,7 +61,7 @@ export function addTime(hours: number, minutes: number, givenDate?: Date) {
 * Adds  times to a given date or create a new date.
 * @param {number} hours - hours if no hours send 0.
 * @param {number} minutes - miutes if no miutes send 0.
-* @returns {Date} date at 1970 1 jan + ur hours and miutes
+* @returns {Date} - date at 1970 1 jan + ur hours and miutes
 */
 export function getRawTime(hours: number, minutes: number) {
     // let date = new Date(); // current date and time

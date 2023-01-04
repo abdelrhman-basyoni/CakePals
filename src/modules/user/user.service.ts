@@ -14,6 +14,7 @@ import { CakeService } from "../cake/cake.service";
 import { OrderService } from "../order/order.service";
 import { OrderStatus } from "../../enums/order.enum";
 import { Period } from "../../dtos/user.dto";
+import { Order } from "../../models/order.model";
 @Injectable()
 export class UserService extends AbstractService<UserDocument> {
     constructor(
@@ -66,14 +67,15 @@ export class UserService extends AbstractService<UserDocument> {
         /**
          * calculate intial time is it now + baking time or is it toadys first time for the baker 
          */
-        console.log({bakerId, cakeId});
+        console.log({ bakerId, cakeId });
         const baker = await this.findOne({ _id: new Types.ObjectId(bakerId), role: UserRoles.baker });
         const cake = await this.cakeService.findOneById(cakeId);
 
-        let today = new Date();
+        const today = new Date();
         today.setHours(0, 0, 0, 0);
+
         const bakerTimeRange = baker.profile.collectionTimeRange;
-        console.log(bakerTimeRange.start,bakerTimeRange.end)
+        console.log(bakerTimeRange.start, bakerTimeRange.end)
         let bakerFirstCollectingTime = Number(addTime(bakerTimeRange.start.hours, bakerTimeRange.start.miutes, today));
         let bakerLastCollectingTime = Number(addTime(bakerTimeRange.end.hours, bakerTimeRange.end.miutes, today));
 
@@ -85,7 +87,7 @@ export class UserService extends AbstractService<UserDocument> {
         } else {
             startTime = Number(bakerFirstCollectingTime)
         }
-        console.log({startTime,nowPlusBaking})
+        console.log({ startTime, nowPlusBaking })
         /**
          * get all orders that is accepted and its endTime is greater than startTime
          * get it sorted based on its bakingStartTime ascending 
@@ -94,60 +96,28 @@ export class UserService extends AbstractService<UserDocument> {
         const orders = await this.orderService.findMany({
             'cake.baker': new Types.ObjectId(bakerId),
             status: OrderStatus.accepted,
-            // bakingEndTime: { $gte: startTime }
+            bakingEndTime: { $gte: startTime }
 
         }, {}, { sort: { bakingStartTime: 1 } });
 
-        console.log({orders})
-        let availableTimes:Period[] = [];
+        console.log({ orders })
+
         const bakingTime = getRawTime(cake.bakingTime.hours, cake.bakingTime.miutes)
 
-        orders.forEach((order, index) => {
-            let period:Period={
-                start:0,
-                end:0
-            };
-            if (index === 0) {
-                /** if its the first element check it against the startTime */
-                if (order.bakingStartTime <= startTime) {
-                    period.start = order.bakingEndTime;
-                } else {
-                    period.start = startTime;
-                    period.end = order.bakingStartTime
-                }
+        /** get the available collectionTimes */
+        const availableTimes = getFreePeriods(orders,startTime,bakerLastCollectingTime,bakingTime)
 
-            } else if (index === (orders.length - 1)) {
-                /** time betweeen last order and baker  last collection time */
-                period.start = order.bakingEndTime;
-                period.end = bakerLastCollectingTime
-            }
-            else {
-                period.start = order.bakingEndTime;
-                period.end = orders[index + 1].bakingStartTime
-            }
-
-            /** calculate check if period is bigger than baking time of cake 
-             * if bigger subtract baking time of cake and add the new period
-             */
-
-            const periodDiff = period.end - period.start;
-
-            if (periodDiff > bakingTime) {
-                period.start = period.start + bakingTime;
-                availableTimes.push(period)
-            }
-
-
-
-        })
-        if(availableTimes.length ==0){
+        /** if periods from the functions this means this baker has no orders yet
+         * then add from now or the start 
+         */
+        if (availableTimes.length == 0) {
             const period = {
-                start:startTime,
-                end : bakerLastCollectingTime
+                start: startTime + config.waitingTimeforPendingOrders,
+                end: bakerLastCollectingTime
             }
             availableTimes.push(period)
         }
-        return availableTimes ;
+        return availableTimes;
 
     }
 
@@ -167,4 +137,55 @@ export class UserService extends AbstractService<UserDocument> {
         });
         return accessToken;
     }
+}
+
+
+/**
+ * a function tofind all availableTimes and
+ * @returns {availableTimes : Period[]} array of periods or an empty array
+ */
+function getFreePeriods(orders: Order[], startTime: number, bakerLastCollectingTime: number, bakingTime: number) {
+    const lastIndex = orders.length - 1;
+    const availableTimes: Period[] = [];
+    orders.forEach((order, index) => {
+        const nextOrder = orders[index+1]
+        const period: Period = {
+            start: 0,
+            end: 0
+        };
+
+        if (index === 0) {
+            /** if its the first element check it against the startTime */
+            if (order.bakingStartTime <= startTime) {
+                period.start = order.bakingEndTime;
+            } else {
+                period.start = startTime;
+                period.end = order.bakingStartTime
+            }
+
+        } else if (index === lastIndex) {
+            /** time betweeen last order and baker  last collection time */
+            period.start = order.bakingEndTime;
+            period.end = bakerLastCollectingTime
+        }
+        else {
+            period.start = order.bakingEndTime;
+            period.end = nextOrder.bakingStartTime
+        }
+
+        /** calculate check if period is bigger than baking time of cake 
+         * if bigger subtract baking time of cake and add the new period
+         * add the pending time to the start
+         */
+        const periodDiff = period.end - period.start;
+
+        if (periodDiff > bakingTime) {
+            period.start = period.start + bakingTime + config.waitingTimeforPendingOrders;
+            availableTimes.push(period)
+        }
+
+
+    })
+
+    return availableTimes;
 }

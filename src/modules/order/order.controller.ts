@@ -29,7 +29,8 @@ export class OrderController {
     constructor(
         private service: OrderService,
         private userService: UserService,
-        private cakeService: CakeService
+        private cakeService: CakeService,
+
     ) { }
 
     @Role([UserRoles.member])
@@ -39,7 +40,9 @@ export class OrderController {
          * validate if the collectionTime isActuallyValid;
          */
         const cake = await this.cakeService.findOneById(body.cake)
+
         const periods = await this.userService.getAvailableCollectingTimes(String(cake.baker), body.cake)
+        // console.log({periodstart : new Date(periods[0].start),collectionTime: new Date(body.collectionTime)})
         let isValidCollectionTime = false;
         for (const period of periods) {
             if (body.collectionTime < period.end) {
@@ -130,37 +133,14 @@ export class OrderController {
     }
 
     @Role([UserRoles.baker])
-    @Post('/respondToOrders/id')
+    @Post('/respondToOrder/:id')
     async acceptOrRejectOrder(@Param('id') ordeId: string, @Body() body: RespondToOrderDto, @Req() req: any) {
+        const test = await this.service.findOne()
         const order = await this.service.findOneAndUpdate({
             _id: new Types.ObjectId(ordeId),
             'cake.baker': new Types.ObjectId(req.user._id)
         }, {
             status: body.response
-        })
-        if (!order) {
-            throw new BadRequestException({ code: errors.notFound }, 'invalid order')
-        }
-        return {
-            success: true,
-            message: messages.success.message,
-            code: messages.success.code,
-            data: {
-                item: order
-            }
-
-        }
-
-    }
-    @Role([UserRoles.baker])
-    @Post('/collectOrder/id')
-    async collectOrder(@Param('id') ordeId: string, @Body() body: CollectOrderDto, @Req() req: any) {
-        const order = await this.service.findOneAndUpdate({
-            _id: new Types.ObjectId(ordeId),
-            'cake.baker': new Types.ObjectId(req.user._id),
-            collectionCode: body.code
-        }, {
-            status: OrderStatus.collected
         })
         if (!order) {
             throw new BadRequestException(errors.notFound, 'invalid order')
@@ -176,7 +156,27 @@ export class OrderController {
         }
 
     }
-    
+
+    @Role([UserRoles.baker])
+    @Post('/collectOrder/:id')
+    async collectOrder(@Param('id') orderId: string, @Body() body: CollectOrderDto, @Req() req: any) {
+
+
+
+        const order = await this.service.collectOrder(orderId, req.user._id,body.code)
+   
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                item: order
+            }
+
+        }
+
+    }
+
     @ApiBearerAuth()
     @Role([UserRoles.member])
     @Post('/rateOrder/id')

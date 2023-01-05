@@ -14,7 +14,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --maxWorkers 1",
+    "test": "jest --detectOpenHandles",
     "test:watch": "jest --maxWorkers 2 --watch",
     "test2": "mocha -r ts-node/register",
     "test:compile": "tsc&&mocha --recursive --exit -timeout 10000 ",
@@ -52,11 +52,11 @@
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "28.1.2",
+    "jest": "^29.3.1",
     "prettier": "^2.3.2",
     "source-map-support": "^0.5.20",
     "supertest": "^6.3.3",
-    "ts-jest": "28.0.5",
+    "ts-jest": "^29.0.3",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.0.0",
@@ -79,6 +79,6 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "testTimeout": 20000,
-    "maxWorkers":3
+    "maxWorkers": 4
   }
 }

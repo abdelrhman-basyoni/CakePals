@@ -11,7 +11,7 @@ import { hashPassword, removeKeys } from '../../../../shared/utils';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
-beforeEach(async () => {
+beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
     }).compile();
@@ -27,7 +27,7 @@ beforeEach(async () => {
 beforeEach(async () => {
     await dbConnection.collection('users').deleteMany({});
 });
-afterEach(async () => {
+afterAll(async () => {
     await app.close()
     // Close the server instance after each test
     await httpServer.close()

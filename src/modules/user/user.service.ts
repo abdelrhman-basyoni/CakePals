@@ -67,7 +67,7 @@ export class UserService extends AbstractService<UserDocument> {
         /**
          * calculate intial time is it now + baking time or is it toadys first time for the baker 
          */
-        console.log({ bakerId, cakeId });
+        // //console.log({ bakerId, cakeId });
         const baker = await this.findOne({ _id: new Types.ObjectId(bakerId), role: UserRoles.baker });
         const cake = await this.cakeService.findOneById(cakeId);
 
@@ -75,19 +75,19 @@ export class UserService extends AbstractService<UserDocument> {
         today.setHours(0, 0, 0, 0);
 
         const bakerTimeRange = baker.profile.collectionTimeRange;
-        console.log(bakerTimeRange.start, bakerTimeRange.end)
+        //console.log(bakerTimeRange.start, bakerTimeRange.end)
         let bakerFirstCollectingTime = Number(addTime(bakerTimeRange.start.hours, bakerTimeRange.start.miutes, today));
         let bakerLastCollectingTime = Number(addTime(bakerTimeRange.end.hours, bakerTimeRange.end.miutes, today));
 
         const nowPlusBaking = Number(addTime(cake.bakingTime.hours, cake.bakingTime.miutes));
-
+        //console.log({bakerFirstCollectingTime,bakerLastCollectingTime})
         let startTime: number;
         if (Number(nowPlusBaking) >= Number(bakerFirstCollectingTime)) {
             startTime = Number(nowPlusBaking)
         } else {
             startTime = Number(bakerFirstCollectingTime)
         }
-        console.log({ startTime, nowPlusBaking })
+        //console.log({ startTime, nowPlusBaking })
         /**
          * get all orders that is accepted and its endTime is greater than startTime
          * get it sorted based on its bakingStartTime ascending 
@@ -100,7 +100,7 @@ export class UserService extends AbstractService<UserDocument> {
 
         }, {}, { sort: { bakingStartTime: 1 } });
 
-        console.log({ orders })
+        //console.log({ orders })
 
         const bakingTime = getRawTime(cake.bakingTime.hours, cake.bakingTime.miutes)
 
@@ -117,6 +117,7 @@ export class UserService extends AbstractService<UserDocument> {
             }
             availableTimes.push(period)
         }
+        //console.log({availableTimes})
         return availableTimes;
 
     }

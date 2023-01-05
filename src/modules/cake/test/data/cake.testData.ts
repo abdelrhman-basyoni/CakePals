@@ -33,10 +33,10 @@ export const cake1 = {
     "description": "best cake in town",
     "price": 100,
     "bakingTime": {
-      "hours": 2,
-      "miutes": 0
+        "hours": 2,
+        "miutes": 0
     },
     "cakeType": "meat Pie"
-  }
+}
 
 

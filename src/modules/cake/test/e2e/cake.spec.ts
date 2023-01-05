@@ -15,7 +15,7 @@ let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
 let token;
-beforeEach(async () => {
+beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
     }).compile();
@@ -26,10 +26,12 @@ beforeEach(async () => {
     httpServer = app.getHttpServer()
     await app.init();
 
-    await dbConnection.collection('cakes').deleteMany({});
+  
 
 })
-
+beforeEach(async() => {
+    await dbConnection.collection('cakes').deleteMany({});
+})
 beforeAll(async () => {
     token = await testSignToken({
         _id: cakeBaker._id,
@@ -37,7 +39,7 @@ beforeAll(async () => {
     }, TokenTypes.access)
 
 });
-afterEach(async () => {
+afterAll(async () => {
     await app.close()
     // Close the server instance after each test
     await httpServer.close()

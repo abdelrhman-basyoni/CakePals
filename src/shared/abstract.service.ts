@@ -60,7 +60,7 @@ export abstract class AbstractService<modelDocument> {
         return this.model.findById(id, projection, options);
     }
 
-    async findOne(filter: FilterQuery<modelDocument>, projection?: ProjectionType<modelDocument>, options?: QueryOptions<modelDocument>): Promise<modelDocument> {
+    async findOne(filter?: FilterQuery<modelDocument>, projection?: ProjectionType<modelDocument>, options?: QueryOptions<modelDocument>): Promise<modelDocument> {
         return this.model.findOne(filter, projection, options);
     }
 

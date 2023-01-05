@@ -45,7 +45,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: status,
       status: false,
       message: exception instanceof String ? exception : exception.response ? exception?.response?.message?.toString() : message?.toString(),
-      code: exception.response.code ? exception.response.code : errors.internalServerError.code,
+      code: exception?.response?.code ? exception.response.code : errors.internalServerError.code,
       description: exception.response?.description,
       timestamp: new Date().toISOString(),
       path: request.url,

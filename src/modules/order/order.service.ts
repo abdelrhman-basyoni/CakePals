@@ -25,7 +25,7 @@ export class OrderService extends AbstractService<OrderDocument> {
 
         while (exist) {
             code = generateUniqueCode()
-            exist = await this.model.exists({ collectionCode: code })
+            exist = await this.model.exists({ status: { $in: [OrderStatus.pending, OrderStatus.accepted] }, collectionCode: code })
         }
         body.collectionCode = code
         return await super.create(body);
@@ -37,7 +37,7 @@ export class OrderService extends AbstractService<OrderDocument> {
          * set the baking endTime to be at the collection time
          * and the bakingStartTime will be the end - the bakingTime
          */
-        console.log({ collectionTime, bakingTime })
+        // console.log({ collectionTime, bakingTime })
         const order: Order = {
             cake,
             member: new Types.ObjectId(memberId),
@@ -79,6 +79,41 @@ export class OrderService extends AbstractService<OrderDocument> {
             throw new BadRequestException()
         }
         return createdOrder
+
+    }
+
+    async collectOrder(orderId: string, userId: string, collectionCode) {
+        
+        const session = await this.connection.startSession();
+        let order, baker;
+        await session.withTransaction(async () => {
+
+            [order, baker] = await Promise.all([
+                this.findOneAndUpdate({
+                    _id: new Types.ObjectId(orderId),
+                    'cake.baker': new Types.ObjectId(userId),
+                    collectionCode: collectionCode,
+                    status: OrderStatus.accepted
+                }, {
+                    status: OrderStatus.collected
+                }, { session }),
+                this.userService.findByIdAndUpdate(userId, { $inc: { 'profile.totalOrders': 1 } }, { session })
+
+            ])
+
+         
+            if (!order || !baker) {
+                throw new BadRequestException(errors.notFound);
+
+
+            }
+
+
+            
+        });
+        await session.endSession();
+
+        return order;
 
     }
 

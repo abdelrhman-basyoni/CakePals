@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsIn, IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
+import { IsIn, IsNotEmpty, IsNumber, IsString, Max, Min } from "class-validator";
 import { Types } from 'mongoose'
 import { HotOrNot, OrderStatus } from "../enums/order.enum";
 import { CakeDto } from "./cake.dto";
@@ -40,6 +40,6 @@ export class RateOrderDto {
     @ApiProperty({  })
     @IsNumber()
     @Min(1)
-    @Min(5)
+    @Max(5)
     rate: number;
 }

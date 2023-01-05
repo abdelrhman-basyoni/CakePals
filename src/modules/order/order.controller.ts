@@ -179,11 +179,11 @@ export class OrderController {
 
     @ApiBearerAuth()
     @Role([UserRoles.member])
-    @Post('/rateOrder/id')
+    @Post('/rateOrder/:id')
     async rateOrder(@Param('id') orderId: string, @Body() body: RateOrderDto, @Req() req: any) {
+        // console.log("here")
 
-
-        const order = this.service.rateOrder(orderId, body.rate, req.user._id)
+        const order = await this.service.rateOrder(orderId, body.rate, req.user._id)
         if (!order) {
             throw new BadRequestException(errors.notFound)
         }

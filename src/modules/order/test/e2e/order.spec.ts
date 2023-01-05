@@ -29,11 +29,12 @@ beforeAll(async () => {
 })
 
 beforeEach(async () => {
-    await Promise.all([
-        dbConnection.collection('orders').deleteMany({}),
-        dbConnection.collection('users').deleteMany({}),
-        dbConnection.collection('cakes').deleteMany({}),
-    ])
+    // await Promise.all([
+    //     dbConnection.collection('orders').deleteMany({}),
+    //     dbConnection.collection('users').deleteMany({}),
+    //     dbConnection.collection('cakes').deleteMany({}),
+    // ])
+    await dbConnection.dropDatabase()
 
 });
 afterAll(async () => {
@@ -68,7 +69,7 @@ describe('order controller    (e2e)', () => {
                     authorization: `Bearer ${memeberToken}`
                 })
                 .send({ ...createOrderEx1Hot, cake: cake.insertedId })
-
+                // console.log(res.body)
             return expect(res.statusCode).toBe(HttpStatus.CREATED);
 
 
@@ -152,7 +153,27 @@ describe('order controller    (e2e)', () => {
 
     
     describe('rate  ', () => {
+        it('/Order/rateorder/:id valid', async () => {
+            const baker = await dbConnection.collection('users').insertOne(bakerEx1)
+            const order = await dbConnection.collection('orders').insertOne({ ...OrderEx1, cake: { ...cakeEx1, baker: baker.insertedId }, status: OrderStatus.collected });
+     
+  
+            const res = await request(httpServer)
+                .post(`/order/rateorder/${order.insertedId}`).set({
+                    authorization: `Bearer ${memeberToken}`
+                })
+                .send({ rate: 5 })
+
+            return expect(res.statusCode).toBe(HttpStatus.CREATED);
+
+                return;
+        });
+
+
     })
 
+    describe('',() =>{
+
+    })
 
 });

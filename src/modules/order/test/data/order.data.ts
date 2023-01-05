@@ -33,8 +33,8 @@ export const cakeEx1 = {
     "description": "best cake in town",
     "price": 100,
     "bakingTime": {
-        "hours": 1,
-        "miutes": 0
+        "hours": 0,
+        "miutes": 10
     },
     "cakeType": "meat Pie"
 }
@@ -56,7 +56,7 @@ export const bakerTokenEx1 = {
 
 export const createOrderEx1Hot = {
     hotOrNot: HotOrNot.hot,
-    collectionTime: Number(addTime(3, 0))
+    collectionTime: Number(addTime(0, 40))
 }
 
 // export const orderEx1 : Order = {
@@ -68,7 +68,7 @@ export const createOrderEx1Hot = {
 
 export const OrderEx1 = {
 
-    "member": memberEx1._id,
+    "member": new Types.ObjectId(memberEx1._id),
     "cake": {
 
         "title": "string",

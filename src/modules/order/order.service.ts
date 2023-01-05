@@ -131,7 +131,7 @@ export class OrderService extends AbstractService<OrderDocument> {
 
                 }, { rate: rate }, { session })
             ])
-
+            // console.log(order)
             if (!order || !baker) {
                 throw new BadRequestException(errors.notFound);
 

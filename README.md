@@ -12,6 +12,31 @@ explore new flavours. A customer typically looks for available offerings nearby,
 account  and places a baking order. Bakers receive orders, bake cakes and hand them over
 at the agreed collection time. Refer to the Appendix for an example.
 
+## project Requirments
+Create a backend API application for CakePals. Consider 3 types of users:
+
+  - guests (unregistered or unauthenticated users);
+  - members — registered users that order cakes from bakers;
+  - bakers — registered users that offer cakes and get paid.
+  
+In addition to typical data (e.g. identifiers), consider that:
+
+  - Baker’s profile includes a picture, self-introduction, location, rating, and collection time range.
+  - Cake offering includes title, description, price, baking time, and type (e.g. fruit cake, meat pie).
+  - Order information includes payment method and collection time.
+  
+Here are the features that we ask you to implement
+
+  - Bakers and members can register, log in and log out.
+  - Bakers can add new cakes for selling and then edit or remove their offerings.
+  - All users can list available cake offerings and filter them by location and type.
+  - All users can see a baker’s profile (with description and rating).
+  - Members can see available collection times and place orders. For collection time availability,
+  assume that each baker can bake only one cake at a time (see an example in the Appendix).
+  - Bakers can see their orders, accept, reject and fulfil them.
+  - Customers can rate their fulfilled orders. Orders rates form the overall baker’s rating.
+  
+
 ## Installation
 
 ```bash
@@ -47,16 +72,4 @@ $ npm run test:cov
 - jest
 - redis
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

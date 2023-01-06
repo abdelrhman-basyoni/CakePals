@@ -36,6 +36,8 @@ Here are the features that we ask you to implement
   - Bakers can see their orders, accept, reject and fulfil them.
   - Customers can rate their fulfilled orders. Orders rates form the overall baker’s rating.
   
+## FlowCharts
+  - you can review some flow charts for the projects logics here [flowcharts](https://www.figma.com/file/hbQ6KYq9XtHl9AErwdeLSG/Untitled?node-id=0%3A1&t=nd1vWkvqqSiBbXmI-1)
 ## Prerequistes
   - redis server installed on the host machine
   - mongodb instance ready and configured as replicaset not as  standalone

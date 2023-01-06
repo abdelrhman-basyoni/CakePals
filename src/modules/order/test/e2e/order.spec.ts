@@ -12,7 +12,7 @@ import { bakerEx1, cakeEx1, memberEx1, createOrderEx1Hot, bakerTokenEx1, OrderEx
 import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { OrderStatus } from '../../../../enums/order.enum';
 import { RedisService } from '../../../cashe/redis.service';
-import {  Redis } from '@nestjs-modules/ioredis';
+import {  Redis } from 'ioredis';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;

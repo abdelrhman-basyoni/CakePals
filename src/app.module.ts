@@ -9,7 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { CakeModule } from './modules/cake/cake.module';
 import { OrderModule } from './modules/order/order.module';
 import { CakeTypeModule } from './modules/cakeType/cakeType.module';
-import { RedisModule } from '@nestjs-modules/ioredis';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 const appModules = [
   UserModule,
   CakeModule,
@@ -26,6 +26,7 @@ const appModules = [
     }),
     RedisModule.forRoot({
       config: { 
+
         url: process.env.REDIS_URL,
       },
     }),

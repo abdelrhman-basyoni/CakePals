@@ -11,7 +11,7 @@ import { hashPassword, removeKeys, testSignToken } from '../../../../shared/util
 import { cake1, cakeBaker } from '../data/cake.testData';
 import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { UserRoles } from '../../../../enums/userRoles.enum';
-import { Redis } from '@nestjs-modules/ioredis';
+import { Redis } from 'ioredis';
 import { RedisService } from '../../../cashe/redis.service';
 let app: INestApplication;
 let dbConnection: Connection;

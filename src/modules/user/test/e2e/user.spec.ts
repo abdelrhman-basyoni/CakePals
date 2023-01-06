@@ -8,9 +8,12 @@ import { DatabaseService } from "../../../../database/database.service";
 import { Connection } from "mongoose"
 import { baker1, member1, member2 } from '../data/users';
 import { hashPassword, removeKeys } from '../../../../shared/utils';
+import { RedisService } from '../../../cashe/redis.service';
+import { Redis } from '@nestjs-modules/ioredis';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
+let redis : Redis
 beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
@@ -19,6 +22,8 @@ beforeAll(async () => {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, stopAtFirstError: true }));
     app.useGlobalFilters(new AllExceptionsFilter());
     dbConnection = moduleFixture.get<DatabaseService>(DatabaseService).getDbHandle();
+    redis = moduleFixture.get<RedisService>(RedisService).getRedis()
+
     httpServer = app.getHttpServer()
     await app.init();
 
@@ -31,6 +36,7 @@ afterAll(async () => {
     await app.close()
     // Close the server instance after each test
     await httpServer.close()
+    redis.disconnect()
 })
 describe('user controller basic endpoints  (e2e)', () => {
     /**

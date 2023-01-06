@@ -11,10 +11,13 @@ import { hashPassword, removeKeys, testSignToken } from '../../../../shared/util
 import { bakerEx1, cakeEx1, memberEx1, createOrderEx1Hot, bakerTokenEx1, OrderEx1 } from '../data/order.data';
 import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { OrderStatus } from '../../../../enums/order.enum';
+import { RedisService } from '../../../cashe/redis.service';
+import {  Redis } from '@nestjs-modules/ioredis';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
 let bakerToken: string, memeberToken: string;
+let redis : Redis
 beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
@@ -23,6 +26,7 @@ beforeAll(async () => {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, stopAtFirstError: true }));
     app.useGlobalFilters(new AllExceptionsFilter());
     dbConnection = moduleFixture.get<DatabaseService>(DatabaseService).getDbHandle();
+    redis = moduleFixture.get<RedisService>(RedisService).getRedis()
     httpServer = app.getHttpServer()
     await app.init();
 
@@ -41,6 +45,7 @@ afterAll(async () => {
     await app.close()
     // Close the server instance after each test
     await httpServer.close()
+    redis.disconnect()
 })
 beforeAll(async () => {
     memeberToken = await testSignToken({

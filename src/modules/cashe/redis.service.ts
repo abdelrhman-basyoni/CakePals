@@ -39,4 +39,8 @@ export class RedisService {
         const done = await this.redis.expire(id,config.accessTokenExpiresInSeconds)
         return result !== null;
     }
+
+     getRedis () : Redis{
+        return this.redis;
+    }
 }

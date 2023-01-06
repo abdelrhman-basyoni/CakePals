@@ -11,10 +11,13 @@ import { hashPassword, removeKeys, testSignToken } from '../../../../shared/util
 import { cake1, cakeBaker } from '../data/cake.testData';
 import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { UserRoles } from '../../../../enums/userRoles.enum';
+import { Redis } from '@nestjs-modules/ioredis';
+import { RedisService } from '../../../cashe/redis.service';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
 let token;
+let redis : Redis
 beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
@@ -23,6 +26,7 @@ beforeAll(async () => {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, stopAtFirstError: true }));
     app.useGlobalFilters(new AllExceptionsFilter());
     dbConnection = moduleFixture.get<DatabaseService>(DatabaseService).getDbHandle();
+    redis = moduleFixture.get<RedisService>(RedisService).getRedis()
     httpServer = app.getHttpServer()
     await app.init();
 
@@ -43,6 +47,7 @@ afterAll(async () => {
     await app.close()
     // Close the server instance after each test
     await httpServer.close()
+    redis.disconnect()
 })
 describe('cake controller basic endpoints  (e2e)', () => {
     /**

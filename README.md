@@ -36,7 +36,9 @@ Here are the features that we ask you to implement
   - Bakers can see their orders, accept, reject and fulfil them.
   - Customers can rate their fulfilled orders. Orders rates form the overall baker’s rating.
   
-
+## Prerequistes
+  - redis server installed on the host machine
+  - mongodb instance ready and configured as replicaset not as  standalone
 ## Installation
 
 ```bash

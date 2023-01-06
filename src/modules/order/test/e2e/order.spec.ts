@@ -33,12 +33,12 @@ beforeAll(async () => {
 })
 
 beforeEach(async () => {
-    // await Promise.all([
-    //     dbConnection.collection('orders').deleteMany({}),
-    //     dbConnection.collection('users').deleteMany({}),
-    //     dbConnection.collection('cakes').deleteMany({}),
-    // ])
-    await dbConnection.dropDatabase()
+    await Promise.all([
+        dbConnection.collection('orders').deleteMany({}),
+        dbConnection.collection('users').deleteMany({}),
+        dbConnection.collection('cakes').deleteMany({}),
+    ])
+
 
 });
 afterAll(async () => {

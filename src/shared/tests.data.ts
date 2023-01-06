@@ -1,5 +1,0 @@
-export const bakerTokens = {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2IyYzA2NmI1Y2FhMDkxOWY2MWRjYjkiLCJyb2xlIjoiYmFrZXIiLCJpYXQiOjE2NzI2NTkyNjcsImV4cCI6NDgyODQxOTI2N30.ucwwDD672StwxjNSYdmT8k6m26DrD0HXlGB_53r4sg8",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2IyYzA2NmI1Y2FhMDkxOWY2MWRjYjkiLCJyb2xlIjoiYmFrZXIiLCJpYXQiOjE2NzI2NTkyNjcsImV4cCI6NDgyODQxOTI2N30.XCnV7PM6xvbjK6CaApHcB9-nsn-UOEb7haUNVhqEbEc"
-
-}

@@ -18,7 +18,7 @@
     "test:watch": "jest --maxWorkers 1 --watch",
     "test2": "mocha -r ts-node/register",
     "test:compile": "tsc&&mocha --recursive --exit -timeout 10000 ",
-    "test:cov": "jest --coverage",
+    "test:cov": "jest --coverage --maxWorkers 1",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --maxWorkers 3  --no-cache --detectOpenHandles --config ./test/jest-e2e.json "
   },

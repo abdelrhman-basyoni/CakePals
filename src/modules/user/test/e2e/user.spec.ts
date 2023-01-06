@@ -8,7 +8,7 @@ import { DatabaseService } from "../../../../database/database.service";
 import { Connection } from "mongoose"
 import { baker1, member1, member2 } from '../data/users';
 import { hashPassword, removeKeys } from '../../../../shared/utils';
-import { RedisService } from '../../../cashe/redis.service';
+import { RedisService } from '../../../cache/redis.service';
 import { Redis } from 'ioredis';
 let app: INestApplication;
 let dbConnection: Connection;

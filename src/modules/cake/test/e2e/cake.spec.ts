@@ -12,7 +12,7 @@ import { cake1, cakeBaker } from '../data/cake.testData';
 import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { UserRoles } from '../../../../enums/userRoles.enum';
 import { Redis } from 'ioredis';
-import { RedisService } from '../../../cashe/redis.service';
+import { RedisService } from '../../../cache/redis.service';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;

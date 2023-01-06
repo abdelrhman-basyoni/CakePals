@@ -1,6 +1,6 @@
 import { Injectable, Inject,ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { RedisService } from '../modules/cashe/redis.service';
+import { RedisService } from '../modules/cache/redis.service';
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
     constructor(@Inject(RedisService) private  redisService: RedisService) {

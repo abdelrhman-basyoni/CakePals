@@ -4,7 +4,7 @@ import { LoginDto } from "../../dtos/login.dto";
 import { TokenDto } from "../../dtos/token.dto";
 import { config } from "../../shared/config";
 import { errors, messages } from "../../shared/responseCodes";
-import { RedisService } from "../cashe/redis.service";
+import { RedisService } from "../cache/redis.service";
 import { UserService } from "./user.service";
 
 

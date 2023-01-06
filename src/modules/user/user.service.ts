@@ -15,7 +15,7 @@ import { OrderService } from "../order/order.service";
 import { OrderStatus } from "../../enums/order.enum";
 import { Period } from "../../dtos/user.dto";
 import { Order } from "../../models/order.model";
-import { RedisService } from "../cashe/redis.service";
+import { RedisService } from "../cache/redis.service";
 @Injectable()
 export class UserService extends AbstractService<UserDocument> {
     constructor(

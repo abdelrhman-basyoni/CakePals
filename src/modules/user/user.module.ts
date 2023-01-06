@@ -10,7 +10,7 @@ import { JwtStrategy, JwtStrategyRefreshToken } from '../../guards/jwt.strategy'
 import { config } from '../../shared/config';
 import { CakeModule } from '../cake/cake.module';
 import { OrderModule } from '../order/order.module';
-import { RedisService } from '../cashe/redis.service';
+import { RedisService } from '../cache/redis.service';
 import { AuthService } from './auth.service';
 
 

@@ -11,7 +11,7 @@ import { hashPassword, removeKeys, testSignToken } from '../../../../shared/util
 import { bakerEx1, cakeEx1, memberEx1, createOrderEx1Hot, bakerTokenEx1, OrderEx1 } from '../data/order.data';
 import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { OrderStatus } from '../../../../enums/order.enum';
-import { RedisService } from '../../../cashe/redis.service';
+import { RedisService } from '../../../cache/redis.service';
 import {  Redis } from 'ioredis';
 let app: INestApplication;
 let dbConnection: Connection;

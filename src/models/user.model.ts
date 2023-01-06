@@ -77,7 +77,8 @@ export class User extends BaseEntity {
   })
   role: UserRoles;
 
-
+  @Prop({ unique: true })
+  refreshToken: string;
 
   async checkPassword(candidatePassword: string) {
     return bcrypt.compare(candidatePassword, this.password);

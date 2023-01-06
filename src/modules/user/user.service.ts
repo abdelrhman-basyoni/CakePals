@@ -1,10 +1,10 @@
 import { User, UserDocument } from "../../models/user.model";
 import { Model, UpdateQuery, QueryOptions, Types } from "mongoose";
 import { AbstractService } from "../../shared/abstract.service";
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException,BadRequestException,Inject } from '@nestjs/common';
 import { LoginDto } from "../../dtos/login.dto";
 import { TokenDto } from "../../dtos/token.dto";
-import { messages } from "../../shared/responseCodes";
+import { errors, messages } from "../../shared/responseCodes";
 import { InjectModel } from "@nestjs/mongoose";
 import { JwtService } from '@nestjs/jwt';
 import { config } from "../../shared/config";
@@ -15,13 +15,15 @@ import { OrderService } from "../order/order.service";
 import { OrderStatus } from "../../enums/order.enum";
 import { Period } from "../../dtos/user.dto";
 import { Order } from "../../models/order.model";
+import { RedisService } from "../cashe/redis.service";
 @Injectable()
 export class UserService extends AbstractService<UserDocument> {
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         private jwtService: JwtService,
         private cakeService: CakeService,
-        private orderService: OrderService
+        private orderService: OrderService,
+        @Inject(RedisService) private  redisService: RedisService
     ) {
         super(userModel);
     }
@@ -49,17 +51,41 @@ export class UserService extends AbstractService<UserDocument> {
 
         }
         user.password = undefined; // remove the password
+        const [refreshToken,accessToken] = await Promise.all([
+            this.createRefreshToken(payload),
+            this.createAccessToken(payload)
+        ])
+        const loggedUser = await this.findByIdAndUpdate(user._id,{refreshToken : refreshToken})
+        if(!loggedUser){
+            throw new BadRequestException(errors.loginFailed)
+        }
         return {
             success: true,
             message: messages.success.message,
             code: messages.success.code,
             data: {
                 user: user,
-                accessToken: await this.createAccessToken(payload),
-                refreshToken: await this.createRefreshToken(payload),
+                accessToken,
+                refreshToken
             }
         }
 
+    }
+
+    async logout(userId:string){
+        /**
+         * delete the refreshToken of the 
+         */
+        const user = await this.findByIdAndUpdate(userId,{ $unset: { refreshToken: "", }})
+        if(!user){
+            throw new BadRequestException(errors.logoutFailed)
+        }
+        const done = await this.redisService.addToBlacklist(userId);
+
+        if(!done){
+            throw new BadRequestException(errors.logoutFailed)
+        }
+        return done;
     }
 
 

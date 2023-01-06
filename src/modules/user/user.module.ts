@@ -6,10 +6,11 @@ import { User, UserSchema } from '../../models/user.model';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
-import { JwtStrategy } from '../../guards/jwt.strategy';
+import { JwtStrategy, JwtStrategyRefreshToken } from '../../guards/jwt.strategy';
 import { config } from '../../shared/config';
 import { CakeModule } from '../cake/cake.module';
 import { OrderModule } from '../order/order.module';
+import { RedisService } from '../cashe/redis.service';
 
 
 @Module({
@@ -27,17 +28,18 @@ import { OrderModule } from '../order/order.module';
         PassportModule,
         JwtModule.registerAsync({
             useFactory: () => ({
- 
-              }),
+
+            }),
 
         }),
 
         forwardRef(() => CakeModule),
         forwardRef(() => OrderModule),
-        
+
+
     ],
     controllers: [UserController],
-    providers: [UserService,JwtStrategy],
-    exports: [UserService,JwtStrategy]
+    providers: [UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService],
+    exports: [UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService]
 })
 export class UserModule { }

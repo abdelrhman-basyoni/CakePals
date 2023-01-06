@@ -11,6 +11,14 @@ export const errors = {
         code:2,
         message: "this field value already exists "
     } ,
+    "loginFailed":{
+        code:3,
+        message: "loginFailed"
+    } ,
+    "logoutFailed":{
+        code:4,
+        message: "loginFailed"
+    } ,
 }
 
 export const messages = {

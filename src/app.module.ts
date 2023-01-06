@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { CakeModule } from './modules/cake/cake.module';
 import { OrderModule } from './modules/order/order.module';
 import { CakeTypeModule } from './modules/cakeType/cakeType.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
 const appModules = [
   UserModule,
   CakeModule,
@@ -19,6 +20,11 @@ const appModules = [
 
 @Module({
   imports: [
+    RedisModule.forRoot({
+      config: { 
+        url: 'redis://localhost:6379',
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal:true
     }),

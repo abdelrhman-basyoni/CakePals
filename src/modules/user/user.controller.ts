@@ -12,6 +12,7 @@ import { BadRequestException } from '@nestjs/common';
 import { errors, messages } from '../../shared/responseCodes';
 import { UserRoles } from '../../enums/userRoles.enum';
 import { GeoLocation } from '../../models/shared'
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags('User')
 @Controller('User')
 export class UserController {
@@ -73,7 +74,26 @@ export class UserController {
         return this.service.login(body)
 
     }
+    @Role([UserRoles.baker, UserRoles.member])
+    @Get('/logOut')
+    async logOut(@Req() req: any): Promise<ResponseDto> {
 
+        const loggout = await this.service.logout(req.user._id)
+
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+        }
+
+    }
+
+    @UseGuards(AuthGuard('refreshStrategy'))
+    @Get('refreshToken')
+    async refresToken(){
+        console.log('hi')
+        return;
+    }
 
 
 
@@ -91,10 +111,13 @@ export class UserController {
     @Get('/findOne/:id')
     async findOne(@Param('id') id: string): Promise<ResponseDto> {
         const user = await this.service.findOneById(id);
+        if (!user) {
+            throw new BadRequestException(errors.notFound)
+        }
         return {
-            success: user ? true : false,
-            message: user ? messages.success.message : errors.notFound.message,
-            code: user ? messages.success.code : errors.notFound.code,
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
             data: {
                 item: user
             }
@@ -104,19 +127,19 @@ export class UserController {
     @Get('/bakerProfile/:id')
     async findBakerProfile(@Param('id') id: string): Promise<ResponseDto> {
         const user = await this.service.findOne({
-            _id : new Types.ObjectId(id),
-            role : UserRoles.baker
-        },{
-            username:1,
-            profile:1
+            _id: new Types.ObjectId(id),
+            role: UserRoles.baker
+        }, {
+            username: 1,
+            profile: 1
         });
-        if(!user){
-            throw new BadRequestException(errors.notFound,'invalid')
+        if (!user) {
+            throw new BadRequestException(errors.notFound, 'invalid')
         }
         return {
             success: true,
             message: messages.success.message,
-            code:messages.success.code ,
+            code: messages.success.code,
             data: {
                 item: user
             }
@@ -177,9 +200,9 @@ export class UserController {
 
 
         return {
-            success: true ,
-            message:  messages.success.message ,
-            code: messages.success.code ,
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
             data: {
                 items: times
             }

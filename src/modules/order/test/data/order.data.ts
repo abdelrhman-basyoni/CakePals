@@ -58,6 +58,10 @@ export const createOrderEx1Hot = {
     hotOrNot: HotOrNot.hot,
     collectionTime: Number(addTime(0, 40))
 }
+export const createOrderNotHot = {
+    hotOrNot: HotOrNot.not,
+    collectionTime: Number(addTime(0, 40))
+}
 
 // export const orderEx1 : Order = {
 

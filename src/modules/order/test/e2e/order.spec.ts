@@ -8,7 +8,7 @@ import { DatabaseService } from "../../../../database/database.service";
 import { Connection, Types } from "mongoose"
 // import { baker1, member1, member2 } from '../data/users';
 import { hashPassword, removeKeys, testSignToken } from '../../../../shared/utils';
-import { bakerEx1, cakeEx1, memberEx1, createOrderEx1Hot, bakerTokenEx1, OrderEx1 } from '../data/order.data';
+import { bakerEx1, cakeEx1, memberEx1, createOrderEx1Hot, bakerTokenEx1, OrderEx1, createOrderNotHot } from '../data/order.data';
 import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { OrderStatus } from '../../../../enums/order.enum';
 import { RedisService } from '../../../cache/redis.service';
@@ -63,7 +63,7 @@ describe('order controller    (e2e)', () => {
      * 
      */
     describe('create Order ', () => {
-        it('/ (order/create) valid', async () => {
+        it('/ (order/create) valid hot', async () => {
             const baker = await dbConnection.collection('users').insertOne({
                 ...bakerEx1, password: await hashPassword(bakerEx1.password)
             });
@@ -74,6 +74,22 @@ describe('order controller    (e2e)', () => {
                     authorization: `Bearer ${memeberToken}`
                 })
                 .send({ ...createOrderEx1Hot, cake: cake.insertedId })
+                // console.log(res.body)
+            return expect(res.statusCode).toBe(HttpStatus.CREATED);
+
+
+        });
+        it('/ (order/create) valid not hot', async () => {
+            const baker = await dbConnection.collection('users').insertOne({
+                ...bakerEx1, password: await hashPassword(bakerEx1.password)
+            });
+            const cake = await dbConnection.collection('cakes').insertOne({ ...cakeEx1, baker: new Types.ObjectId(baker.insertedId) })
+
+            const res = await request(httpServer)
+                .post('/order/create').set({
+                    authorization: `Bearer ${memeberToken}`
+                })
+                .send({ ...createOrderNotHot, cake: cake.insertedId })
                 // console.log(res.body)
             return expect(res.statusCode).toBe(HttpStatus.CREATED);
 

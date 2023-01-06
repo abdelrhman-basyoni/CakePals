@@ -20,13 +20,14 @@ const appModules = [
 
 @Module({
   imports: [
-    RedisModule.forRoot({
-      config: { 
-        url: 'redis://localhost:6379',
-      },
-    }),
+
     ConfigModule.forRoot({
       isGlobal:true
+    }),
+    RedisModule.forRoot({
+      config: { 
+        url: process.env.REDIS_URL,
+      },
     }),
     DatabaseModule,
     ...appModules

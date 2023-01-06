@@ -11,6 +11,7 @@ import { config } from '../../shared/config';
 import { CakeModule } from '../cake/cake.module';
 import { OrderModule } from '../order/order.module';
 import { RedisService } from '../cashe/redis.service';
+import { AuthService } from './auth.service';
 
 
 @Module({
@@ -39,7 +40,7 @@ import { RedisService } from '../cashe/redis.service';
 
     ],
     controllers: [UserController],
-    providers: [UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService],
-    exports: [UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService]
+    providers: [AuthService,UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService],
+    exports: [AuthService,UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService]
 })
 export class UserModule { }

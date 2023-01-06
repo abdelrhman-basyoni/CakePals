@@ -11,7 +11,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         // Call the super canActivate() method to perform the JWT validation
         const result = (await super.canActivate(context)) as boolean;
         const request = context.switchToHttp().getRequest();
-        console.log(request['user'])
+
         if (result) {
 
             const isBlacklisted = await this.redisService.isBlacklisted(request.user._id);

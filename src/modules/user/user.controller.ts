@@ -6,18 +6,21 @@ import { ResponseDto } from '../../dtos/response.dto';
 import { RegisterBakerDto, RegisterMemberDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
 import { Role } from '../../guards/roles.decorator';
 import { User } from '../../models/user.model';
-import { UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { BadRequestException } from '@nestjs/common';
 import { errors, messages } from '../../shared/responseCodes';
 import { UserRoles } from '../../enums/userRoles.enum';
 import { GeoLocation } from '../../models/shared'
 import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from './auth.service';
 @ApiTags('User')
 @Controller('User')
 export class UserController {
 
-    constructor(private service: UserService) { }
+    constructor(
+        private service: UserService,
+        private authService : AuthService
+        ) { }
     /* POST User End Point */
 
 
@@ -71,14 +74,14 @@ export class UserController {
     @Post('/login')
     async logiIn(@Body() body: LoginDto): Promise<ResponseDto> {
 
-        return this.service.login(body)
+        return this.authService.login(body)
 
     }
     @Role([UserRoles.baker, UserRoles.member])
     @Get('/logOut')
     async logOut(@Req() req: any): Promise<ResponseDto> {
 
-        const loggout = await this.service.logout(req.user._id)
+        const loggout = await this.authService.logout(req.user._id)
 
         return {
             success: true,
@@ -90,9 +93,19 @@ export class UserController {
 
     @UseGuards(AuthGuard('refreshStrategy'))
     @Get('refreshToken')
-    async refresToken(){
-        console.log('hi')
-        return;
+    async refresToken(@Req() req: any) {
+
+        const token = req.headers['authorization'].split(" ")[1]
+        const accessToken = await this.authService.refreshToken(token)
+        
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data:{
+                accessToken
+            }
+        }
     }
 
 

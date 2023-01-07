@@ -8,6 +8,7 @@ import {
 import { errors } from './responseCodes';
 // import { getI18nContextFromArgumentsHost } from 'nestjs-i18n';
 // import { isNumber } from './utils';
+import { logger } from '../logger/logger';
 export function isNumber(value: string | number): boolean {
   return value != null && value !== '' && !isNaN(Number(value.toString()));
 }
@@ -21,6 +22,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     // console.log(exception?.response)
     /** mongodb dublicat key error handler */
     let message = "";
+
     switch (exception.code) {
       case 11000:
         // message = i18n.t('errors.duplicateKey',{args:{fieldName:`${Object.keys(exception.keyValue)}`}});
@@ -50,6 +52,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: request.url,
     };
+
+    if(res.code === errors.internalServerError.code){
+      /** this the n a critical error  */
+      console.log('here')
+      logger.error('probably a critical error',exception)
+    }else{
+      console.log('here2')
+      logger.warning('an error has occured',exception)
+    }
     response.status(status)
     response.send(res);
     // response.status(status).json({

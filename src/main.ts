@@ -3,13 +3,17 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { AllExceptionsFilter } from './shared/exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { LoggingInterceptor } from './logger/logger.interceptor';
 async function bootstrap() {
   const appName = "cake-pals"
   const app = await NestFactory.create(AppModule);
+  app.useGlobalInterceptors(new LoggingInterceptor());
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, stopAtFirstError: true }));
-  app.useGlobalFilters(new AllExceptionsFilter());
 
+  app.useGlobalFilters(new AllExceptionsFilter());
+  
 
 
   /** swagger  start*/

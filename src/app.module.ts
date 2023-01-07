@@ -10,6 +10,7 @@ import { CakeModule } from './modules/cake/cake.module';
 import { OrderModule } from './modules/order/order.module';
 import { CakeTypeModule } from './modules/cakeType/cakeType.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+
 const appModules = [
   UserModule,
   CakeModule,
@@ -38,18 +39,9 @@ const appModules = [
   controllers: [AppController],
   providers: [AppService],
 
+
 })
 export class AppModule {
-  // private readonly connection: Connection;
-  // constructor() {
-  //   this.connection = createConnection();
-  // }
 
-  // onApplicationShutdown(signal: string) {
-  //   if(process.env.NODE_ENV == 'Test'){
-  //     this.connection.dropDatabase();
-  //   }
-  //   this.connection.close();
-  // }
 }
 

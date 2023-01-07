@@ -39,8 +39,9 @@ export class AuthService {
             this.createAccessToken(payload)
         ])
         const loggedUser = await this.userService.findByIdAndUpdate(user._id, { refreshToken: refreshToken })
-        const done = await this.redisService.delete(user._id)
-        if (!loggedUser && !done) {
+        await this.redisService.delete(user._id)
+
+        if (!loggedUser) {
             throw new BadRequestException(errors.loginFailed)
         }
         return {

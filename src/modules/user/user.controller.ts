@@ -79,6 +79,7 @@ export class UserController {
     }
     @Role([UserRoles.baker, UserRoles.member])
     @Get('/logOut')
+    @ApiBearerAuth()
     async logOut(@Req() req: any): Promise<ResponseDto> {
 
         const loggout = await this.authService.logout(req.user._id)
@@ -92,6 +93,7 @@ export class UserController {
     }
 
     @UseGuards(AuthGuard('refreshStrategy'))
+    @ApiBearerAuth()
     @Get('refreshToken')
     async refresToken(@Req() req: any) {
 
@@ -163,7 +165,6 @@ export class UserController {
 
     /* PUT  User End Point */
     @ApiBearerAuth()
-
     @Put('/updateOne:id')
     async updateOne(@Param('id') id: string, @Body() req: UpdateUserDto) {
         /** allow only the profile field if the user is baker */

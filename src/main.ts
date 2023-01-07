@@ -22,7 +22,7 @@ async function bootstrap() {
     .setDescription(`${appName} Docs`)
     .setVersion('1.0')
     .addBearerAuth()
-    .addSecurityRequirements('bearer')
+    // .addSecurityRequirements('bearer')
     // .addSecurity('Authorization', { type: 'http', bearerFormat: 'Bearer ' })
     .build();
 

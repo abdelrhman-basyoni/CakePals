@@ -32,6 +32,7 @@ export class CakeController {
     /* POST Cake End Point */
 
 
+    @ApiBearerAuth()
     @Post('create')
     @Role([UserRoles.baker])
     async create(@Body() body: CakeDto, @Req() req: any) {
@@ -77,12 +78,18 @@ export class CakeController {
 
 
     /* GET All  End Point */
+    
     @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @Get('/getAll')
     getAll(@Query('pagesize') pageSize: number, @Query('page') page: number,) {
         return this.service.findAll({}, page || 1, pageSize || 20);
     }
+
+
+    
     @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @ApiQuery({name: 'location',example:'[30.15645132, 30.4576541]'})
     @Get('/filterCake')
     async filterCakes(
@@ -111,7 +118,9 @@ export class CakeController {
 
 
     /* GET One Cake End Point */
+    
     @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @Get('/findOne/:id')
     async findOne(@Param('id') id: string): Promise<ResponseDto> {
         const cake = await this.service.findOneById(id);
@@ -134,7 +143,7 @@ export class CakeController {
     /* PUT  Cake End Point */
     @ApiBearerAuth()
     @Role([UserRoles.baker])
-    @Put('/updateOne:id')
+    @Put('/updateOne/:id')
     async updateOne(@Param('id') id: string, @Body() body: CakeDto, @Req() req: any) {
         /** 
          * the one that can change it for now should be the cake owner
@@ -181,7 +190,6 @@ export class CakeController {
 
     /* Delete  Cake End Point */
     @ApiBearerAuth()
-    // @UseGuards(JwtAuthGuard)
     @Role([UserRoles.baker])
     @Delete('/deleteOne/:id')
     async deleteOne(@Param('id') id: string, @Req() req: any) {

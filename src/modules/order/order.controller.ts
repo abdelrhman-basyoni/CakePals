@@ -24,6 +24,7 @@ import { config } from '../../shared/config';
 
 @ApiTags('Order')
 @Controller('Order')
+@ApiBearerAuth()
 export class OrderController {
 
     constructor(
@@ -32,7 +33,7 @@ export class OrderController {
         private cakeService: CakeService,
 
     ) { }
-
+    @ApiBearerAuth()
     @Role([UserRoles.member])
     @Post('/create')
     async create(@Body() body: CreateOrderDto, @Req() req: any) {
@@ -118,6 +119,8 @@ export class OrderController {
     getAll(@Query('pagesize') pageSize: number, @Query('page') page: number,) {
         return this.service.findAll({}, page || 1, pageSize || 200);
     }
+
+
     @ApiBearerAuth()
     @Get('/getMyOrders')
     @Role([UserRoles.member, UserRoles.baker])
@@ -132,6 +135,8 @@ export class OrderController {
         }, page || 1, pageSize || 200);
     }
 
+
+    @ApiBearerAuth()
     @Role([UserRoles.baker])
     @Post('/respondToOrder/:id')
     async acceptOrRejectOrder(@Param('id') ordeId: string, @Body() body: RespondToOrderDto, @Req() req: any) {
@@ -157,6 +162,7 @@ export class OrderController {
 
     }
 
+    @ApiBearerAuth()
     @Role([UserRoles.baker])
     @Post('/collectOrder/:id')
     async collectOrder(@Param('id') orderId: string, @Body() body: CollectOrderDto, @Req() req: any) {

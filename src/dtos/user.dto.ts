@@ -91,3 +91,9 @@ export type Period = {
     start: number;
     end: number;
 }
+
+
+export class GuestUserDto{
+    @IsNotEmpty()
+    address: string;
+}

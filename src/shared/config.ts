@@ -1,6 +1,6 @@
 export const config = {
-    accessTokenExpiresIn:'900s',// 15minutes
-    accessTokenExpiresInSeconds:900,
+    accessTokenExpiresIn:'3600s',// 1 hour
+    accessTokenExpiresInSeconds:3600,
     refreshTokenExpiresIn:'30d',
     maxNumberOfLogsInMongoDb:1000,
     waitingTimeforPendingOrders : 10, // in miutes

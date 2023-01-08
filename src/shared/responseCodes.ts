@@ -19,6 +19,10 @@ export const errors = {
         code:4,
         message: "loginFailed"
     } ,
+    "invalidRequest":{
+        code:5,
+        message: "invalidRequest"
+    } ,
 }
 
 export const messages = {

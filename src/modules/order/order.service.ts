@@ -100,7 +100,7 @@ export class OrderService extends AbstractService<OrderDocument> {
                 this.userService.findByIdAndUpdate(userId, { $inc: { 'profile.totalOrders': 1 } }, { session })
 
             ])
-
+            
          
             if (!order || !baker) {
                 throw new BadRequestException(errors.notFound);

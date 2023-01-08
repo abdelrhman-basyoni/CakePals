@@ -3,7 +3,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Types } from 'mongoose'
 import { LoginDto } from '../../dtos/login.dto';
 import { ResponseDto } from '../../dtos/response.dto';
-import { GuestUserDto, RegisterBakerDto, RegisterMemberDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
+import { GuestUserDto, RegisterBakerDto, RegisterMemberDto, ToggleAcceptingOrdersDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
 import { Role } from '../../guards/roles.decorator';
 import { User } from '../../models/user.model';
 import { UserService } from './user.service';
@@ -210,6 +210,26 @@ export class UserController {
         const user = await this.service.findByIdAndUpdate(requestUser._id, body);
         if (!user) {
             throw new BadRequestException(errors.invalidRequest)
+        }
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                item: user
+            }
+        }
+    }
+
+    @ApiBearerAuth()
+    @Role([UserRoles.baker])
+    @Put('/updateOne')
+    async toggleAcceptingOrders(@Body() body: ToggleAcceptingOrdersDto, @Req() req: any) {
+        /** allow only the profile field if the user is baker */
+
+        const user = await this.service.findByIdAndUpdate(req.user._id, {"profile.IsAcceptingOrders":body.IsAcceptingOrders});
+        if (!user) {
+            throw new BadRequestException(errors.notFound)
         }
         return {
             success: true,

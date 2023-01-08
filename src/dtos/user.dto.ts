@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty,Min,Max,IsIn, IsEmail,IsInt, IsArray } from 'class-validator'
+import { IsNotEmpty,Min,Max,IsIn, IsEmail,IsInt, IsArray, IsBoolean } from 'class-validator'
 import { UserRoles } from "../enums/userRoles.enum";
 
 export class DayTimeDto {
@@ -85,6 +85,11 @@ export class RegisterBakerDto extends RegisterMemberDto {
 export class UpdateUserDto extends UserDto {
     @ApiProperty({ type:() => BakerProfileDto})
     profile: BakerProfileDto;
+}
+export class ToggleAcceptingOrdersDto  {
+    @ApiProperty({ })
+    @IsBoolean()
+    IsAcceptingOrders: boolean;
 }
 
 export type Period = {

@@ -38,6 +38,10 @@ Here are the features that we ask you to implement
   
 ## FlowCharts
   - you can review some flow charts for the projects logics here [flowcharts](https://www.figma.com/file/hbQ6KYq9XtHl9AErwdeLSG/Untitled?node-id=0%3A1&t=nd1vWkvqqSiBbXmI-1)
+  - Example:
+  
+  
+   <a href="https://ibb.co/m47pxDy"><img src="https://i.ibb.co/bXntfWv/flow.jpg" alt="flow" border="0"></a>
 
 ## Api Documentations
   - [here](https://cake-pals.onrender.com/api)

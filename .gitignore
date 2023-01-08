@@ -39,3 +39,4 @@ lerna-debug.log*
 client.http
 .eslintrc.js
 uploads/
+docker/*

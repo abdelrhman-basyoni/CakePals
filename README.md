@@ -60,7 +60,7 @@ Here are the features that we ask you to implement
 
 
 ## Installation
-  # Prerequistes
+  ### Prerequistes
     - to run it locally you need:
       - create a .env file at the root and add the keys like in .env.example file with ur actuall links and data
       - redis server installed on the host machine, or remote ( you can use the branch called docker and run the docker-compose ).

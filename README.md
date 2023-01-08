@@ -60,19 +60,20 @@ Here are the features that we ask you to implement
 
 
 ## Installation
-  ### Prerequistes
-    - to run it locally you need:
-      - create a .env file at the root and add the keys like in .env.example file with ur actuall links and data
-      - redis server installed on the host machine, or remote ( you can use the branch called docker and run the docker-compose ).
-      - mongodb instance ready and configured as replicaset not as standalone. ( or you can easily get one from mongo atlas)
-      
+## A-Locally
+### Prerequistes
+  - create a .env file at the root and add the keys like in .env.example file with ur actuall links and data
+  - to run it locally you need:
+    - redis server installed on the host machine, or remote 
+    - mongodb instance ready and configured as replicaset not as standalone.
 
-  # Install packages
-  ```bash
-  $ npm install
-  ```
 
-## Running the app
+### Install packages
+```bash
+$ npm install
+```
+
+### Running the app
 
 ```bash
 
@@ -84,15 +85,22 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+
+## B-Docker
+    
+
+```bash
+$ docker build .
+$ docker-compose up
+```
 ## Test
 
 ```bash
 # to run tests
 $ npm run test
 
-# test coverage
-$ npm run test:cov
 ```
+      
 ## Technologies
 - Nodejs
 - nestjs
@@ -100,5 +108,6 @@ $ npm run test:cov
 - mongodb
 - jest
 - redis
+- Docker
 
 

@@ -38,10 +38,31 @@ Here are the features that we ask you to implement
   
 ## FlowCharts
   - you can review some flow charts for the projects logics here [flowcharts](https://www.figma.com/file/hbQ6KYq9XtHl9AErwdeLSG/Untitled?node-id=0%3A1&t=nd1vWkvqqSiBbXmI-1)
-## Prerequistes
-  - redis server installed on the host machine
-  - mongodb instance ready and configured as replicaset not as  standalone
+
+## Api Documentations
+  - [here](https://cake-pals.onrender.com/api)
+## What should we add to the app
+
+  - we need to add calculation matrix for the bakers to define how the cake-pals will charge them ( subscription module or percentage )
+  - currently payment method is cash on collection (COC), we can add new payment methods.
+  - keep track of the user search and interest  and integrate that into dashboard to help the marketing team, to develop campagins and targeted ads
+  - create a dashboard for the baker to monitor their businesses
+  - add email verification (didnt had time for it)
+  - add notification services  (by email or firebase)
+  - notifiy the baker when there is a new order 
+  - notify the user when his order has been created
+  - clear the orders that has been pending for over 15 min or 10 and tell the user sorry it has been not accepted.
+  - add cancel order logic so that the user can  cancel his order within the first 15 min.
+  - the previous point open a new rabbit hole ( how are the business going to handle the cakes that the user didnt pick/
+    - change the payment to be card only ?
+    - how are we going to compensate the baker in these cases
+    - what if the other way happened the user went and didnt find the cake ?
+
+
 ## Installation
+  # Prerequistes
+    - redis server installed on the host machine, or remote ( you can use the branch called docker and run the docker-compose ).
+    - mongodb instance ready and configured as replicaset not as standalone. ( u can easily get one from  mongo atlas)
 
 ```bash
 $ npm install

@@ -1,7 +1,7 @@
 import * as winston from 'winston';
 // import * as winstonMongoDB from 'winston-mongodb';
 import { MongoDB } from 'winston-mongodb';
-import { config } from '../shared/config';
+import { appSettings } from '../shared/app.settings';
 
 const options = {
     db: process.env.LOGS_DB,
@@ -13,14 +13,9 @@ const options = {
     level: 'warning',
     metaKey: 'stack',
     capped:true,
-    cappedMax: config.maxNumberOfLogsInMongoDb,
+    cappedMax: appSettings.maxNumberOfLogsInMongoDb,
     format: winston.format.json()
-    // format: winston.format.combine(
-    //     // winston.format.errors({ stack: true }),
-    //     // winston.format.timestamp(),
-    //     winston.format.json(),
-    //     winston.format.prettyPrint({}),
-    // )
+
 
 };
 
@@ -38,6 +33,10 @@ export const logger = winston.createLogger({
     format: jsonLogFileFormat,
     transports: [
         new MongoDB(options),
-        new winston.transports.Console({level:'info'}),
+        // new winston.transports.Console({level:'info'}),
     ]
 });
+
+export function closeWinstonConnection(){
+    logger.transports[0].close();
+}

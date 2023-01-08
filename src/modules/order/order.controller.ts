@@ -12,15 +12,12 @@ import { OrderService } from './order.service';
 import { errors, messages } from '../../shared/responseCodes';
 
 import { UserRoles } from '../../enums/userRoles.enum';
-// import { OrderDto } from '../../dtos/order.dto';
-import { create } from 'domain';
-import { Type } from 'class-transformer';
 import { CollectOrderDto, CreateOrderDto, RateOrderDto, RespondToOrderDto } from '../../dtos/order.dto';
 import { UserService } from '../user/user.service';
 import { CakeService } from '../cake/cake.service';
 import { addTime, getRawTime } from '../../shared/utils';
 import { HotOrNot, OrderStatus } from '../../enums/order.enum';
-import { config } from '../../shared/config';
+import { appSettings } from '../../shared/app.settings';
 
 @ApiTags('Order')
 @Controller('Order')
@@ -40,9 +37,17 @@ export class OrderController {
         /**
          * validate if the collectionTime isActuallyValid;
          */
-        const cake = await this.cakeService.findOneById(body.cake)
 
-        const periods = await this.userService.getAvailableCollectingTimes(String(cake.baker), body.cake)
+        const cake = await this.cakeService.findOneById(body.cake);
+        const baker = await this.userService.findOne({ _id: new Types.ObjectId(String(cake.baker)), role: UserRoles.baker,"profile.IsAcceptingOrders":true });
+        if(!baker || !cake){
+            throw new BadRequestException(errors.invalidRequest)
+        }
+        if(!baker.profile.IsAcceptingOrders){
+            throw new BadRequestException(errors.bakerNotAcceptingOrders)
+        }
+
+        const periods = await this.userService.getAvailableCollectingTimes(baker, cake)
         // console.log({periodstart : new Date(periods[0].start),collectionTime: new Date(body.collectionTime)})
         let isValidCollectionTime = false;
         for (const period of periods) {
@@ -56,7 +61,7 @@ export class OrderController {
         }
 
         const bakingTime = getRawTime(cake.bakingTime.hours, cake.bakingTime.miutes)
-        const firstAvailableTime = Number(addTime(0, Number(config.waitingTimeforPendingOrders), new Date(periods[0].start)))
+        const firstAvailableTime = Number(addTime(0, Number(appSettings.waitingTimeforPendingOrders), new Date(periods[0].start)))
         let order: Order;
         switch (body.hotOrNot) {
             case (HotOrNot.hot): {

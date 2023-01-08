@@ -4,6 +4,7 @@ export const cakeBaker = {
     "username": "baker",
     "email": "baker1@email.com",
     "profile": {
+        "IsAcceptingOrders":true,
         "pic": "https://www.mona.uwi.edu/modlang/sites/default/files/modlang/male-avatar-placeholder.png",
         "about": "string",
         "location": [

@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { TokenDto } from '../dtos/token.dto';
-import { config } from './config';
+import { appSettings } from './app.settings';
 import { BadRequestException } from '@nestjs/common'
 import { TokenTypes } from '../enums/tokenTypes.enum';
 import * as zxcvbn from 'zxcvbn';

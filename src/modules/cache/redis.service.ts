@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-// import * as Redis from 'ioredis';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
-import { config } from '../../shared/config';
+import { appSettings } from '../../shared/app.settings';
 @Injectable()
 export class RedisService {
 
@@ -37,7 +36,7 @@ export class RedisService {
 
     async addToBlacklist(id: string): Promise<boolean> {
         const result = await this.redis.set(id, 'true');
-        const done = await this.redis.expire(id,config.accessTokenExpiresInSeconds)
+        const done = await this.redis.expire(id,appSettings.accessTokenExpiresInSeconds)
         return result !== null;
     }
 

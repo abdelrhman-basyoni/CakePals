@@ -40,6 +40,9 @@ export class Profile {
   @Prop({ type: () => CollectionTimeRange })
   collectionTimeRange: CollectionTimeRange
 
+  @Prop({default:true})
+  IsAcceptingOrders: boolean;
+
 }
 
 

@@ -13,6 +13,7 @@ import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { OrderStatus } from '../../../../enums/order.enum';
 import { RedisService } from '../../../cache/redis.service';
 import {  Redis } from 'ioredis';
+import { closeWinstonConnection } from '../../../../logger/logger';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
@@ -46,6 +47,7 @@ afterAll(async () => {
     // Close the server instance after each test
     await httpServer.close()
     redis.disconnect()
+    closeWinstonConnection()
 })
 beforeAll(async () => {
     memeberToken = await testSignToken({
@@ -74,7 +76,7 @@ describe('order controller    (e2e)', () => {
                     authorization: `Bearer ${memeberToken}`
                 })
                 .send({ ...createOrderEx1Hot, cake: cake.insertedId })
-                // console.log(res.body)
+                console.log(res.body)
             return expect(res.statusCode).toBe(HttpStatus.CREATED);
 
 

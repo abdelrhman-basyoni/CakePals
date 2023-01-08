@@ -7,7 +7,7 @@ import { TokenDto } from "../../dtos/token.dto";
 import { errors, messages } from "../../shared/responseCodes";
 import { InjectModel } from "@nestjs/mongoose";
 import { JwtService } from '@nestjs/jwt';
-import { config } from "../../shared/config";
+import { appSettings } from "../../shared/app.settings";
 import { addTime, getRawTime, hashPassword } from "../../shared/utils";
 import { UserRoles } from "../../enums/userRoles.enum";
 import { CakeService } from "../cake/cake.service";
@@ -16,6 +16,7 @@ import { OrderStatus } from "../../enums/order.enum";
 import { Period } from "../../dtos/user.dto";
 import { Order } from "../../models/order.model";
 import { RedisService } from "../cache/redis.service";
+import { Cake } from "../../models/cake.model";
 @Injectable()
 export class UserService extends AbstractService<UserDocument> {
     constructor(
@@ -37,13 +38,12 @@ export class UserService extends AbstractService<UserDocument> {
     }
 
 
-    async getAvailableCollectingTimes(bakerId: string, cakeId: string) {
+    async getAvailableCollectingTimes(baker: User, cake: Cake) {
         /**
          * calculate intial time is it now + baking time or is it toadys first time for the baker 
          */
         // //console.log({ bakerId, cakeId });
-        const baker = await this.findOne({ _id: new Types.ObjectId(bakerId), role: UserRoles.baker });
-        const cake = await this.cakeService.findOneById(cakeId);
+
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -68,7 +68,7 @@ export class UserService extends AbstractService<UserDocument> {
          */
 
         const orders = await this.orderService.findMany({
-            'cake.baker': new Types.ObjectId(bakerId),
+            'cake.baker': new Types.ObjectId(baker._id),
             status: OrderStatus.accepted,
             bakingEndTime: { $gte: startTime }
 
@@ -86,7 +86,7 @@ export class UserService extends AbstractService<UserDocument> {
          */
         if (availableTimes.length == 0) {
             const period = {
-                start: startTime + config.waitingTimeforPendingOrders,
+                start: startTime + appSettings.waitingTimeforPendingOrders,
                 end: bakerLastCollectingTime
             }
             availableTimes.push(period)
@@ -141,7 +141,7 @@ function getFreePeriods(orders: Order[], startTime: number, bakerLastCollectingT
         const periodDiff = period.end - period.start;
 
         if (periodDiff > bakingTime) {
-            period.start = period.start + bakingTime + config.waitingTimeforPendingOrders;
+            period.start = period.start + bakingTime + appSettings.waitingTimeforPendingOrders;
             availableTimes.push(period)
         }
 

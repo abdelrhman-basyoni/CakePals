@@ -13,10 +13,12 @@ import { TokenTypes } from '../../../../enums/tokenTypes.enum';
 import { UserRoles } from '../../../../enums/userRoles.enum';
 import { Redis } from 'ioredis';
 import { RedisService } from '../../../cache/redis.service';
+import { closeWinstonConnection } from '../../../../logger/logger';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
 let token;
+let guestToken;
 let redis : Redis
 beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -41,6 +43,10 @@ beforeAll(async () => {
         _id: cakeBaker._id,
         role: UserRoles.baker
     }, TokenTypes.access)
+    guestToken = await testSignToken({
+        _id: "172.168.1.1",
+        role: UserRoles.guest
+    }, TokenTypes.access)
 
 });
 afterAll(async () => {
@@ -48,6 +54,7 @@ afterAll(async () => {
     // Close the server instance after each test
     await httpServer.close()
     redis.disconnect()
+    closeWinstonConnection()
 })
 describe('cake controller basic endpoints  (e2e)', () => {
     /**
@@ -99,6 +106,9 @@ describe('cake controller basic endpoints  (e2e)', () => {
             });
             const res = await request(httpServer)
                 .get(`/cake/findone/${cake.insertedId}`)
+                .set({
+                    authorization: `Bearer ${guestToken}`
+                })
             expect(res.statusCode).toBe(HttpStatus.OK);
             return;
         })
@@ -106,6 +116,9 @@ describe('cake controller basic endpoints  (e2e)', () => {
 
             const res = await request(httpServer)
                 .get(`/cake/findone/63b2cf6bed8bcdce0482fa29`)
+                .set({
+                    authorization: `Bearer ${guestToken}`
+                })
             expect(res.statusCode).toBe(HttpStatus.NOT_FOUND);
             return;
         })

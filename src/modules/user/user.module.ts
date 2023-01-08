@@ -5,9 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../../models/user.model';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule } from '@nestjs/config';
+
 import { JwtStrategy, JwtStrategyRefreshToken } from '../../guards/jwt.strategy';
-import { config } from '../../shared/config';
+
 import { CakeModule } from '../cake/cake.module';
 import { OrderModule } from '../order/order.module';
 import { RedisService } from '../cache/redis.service';

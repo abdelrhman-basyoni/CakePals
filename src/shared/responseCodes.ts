@@ -27,6 +27,10 @@ export const errors = {
         code:6,
         message: "weakPassword"
     } ,
+    "bakerNotAcceptingOrders":{
+        code:7,
+        message: "bakerNotAcceptingOrders"
+    } ,
 }
 
 export const messages = {

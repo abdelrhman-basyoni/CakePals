@@ -95,5 +95,6 @@ export type Period = {
 
 export class GuestUserDto{
     @IsNotEmpty()
+    @ApiProperty({ })
     address: string;
 }

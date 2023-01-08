@@ -44,6 +44,8 @@ export class UserController {
 
 
     }
+
+
     @Post('/register-baker')
     async bakerRegister(@Body() body: RegisterBakerDto): Promise<ResponseDto> {
 
@@ -71,6 +73,8 @@ export class UserController {
         }
 
     }
+
+
     @Post('/login')
     async logiIn(@Body() body: LoginDto): Promise<ResponseDto> {
 

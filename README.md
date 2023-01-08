@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="#" target="blank"><img src="https://i.ibb.co/8PShdRx/cake-pals1.png" width="200" alt="Nest Logo" /></a>
+  <a href="https://cake-pals.onrender.com/api" target="blank"><img src="https://i.ibb.co/8PShdRx/cake-pals1.png" width="200" alt="Nest Logo" /></a>
 </p>
 
 <p align="center">CakePals is a place where people can sell home-baked cakes to each other.</p>
@@ -41,7 +41,7 @@ Here are the features that we ask you to implement
 
 ## Api Documentations
   - [here](https://cake-pals.onrender.com/api)
-## What should we add to the app
+## Features ( To be Added)
 
   - we need to add calculation matrix for the bakers to define how the cake-pals will charge them ( subscription module or percentage )
   - currently payment method is cash on collection (COC), we can add new payment methods.
@@ -61,12 +61,16 @@ Here are the features that we ask you to implement
 
 ## Installation
   # Prerequistes
-    - redis server installed on the host machine, or remote ( you can use the branch called docker and run the docker-compose ).
-    - mongodb instance ready and configured as replicaset not as standalone. ( u can easily get one from  mongo atlas)
+    - to run it locally you need:
+      - create a .env file at the root and add the keys like in .env.example file with ur actuall links and data
+      - redis server installed on the host machine, or remote ( you can use the branch called docker and run the docker-compose ).
+      - mongodb instance ready and configured as replicaset not as standalone. ( or you can easily get one from mongo atlas)
+      
 
-```bash
-$ npm install
-```
+  # Install packages
+  ```bash
+  $ npm install
+  ```
 
 ## Running the app
 

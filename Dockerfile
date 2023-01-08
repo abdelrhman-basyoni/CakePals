@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # Copy the .env file to the dist folder
-COPY .env dist
+# COPY .env dist
 
 # Create a production image
 FROM node:latest

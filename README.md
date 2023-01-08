@@ -59,7 +59,7 @@ Here are the features that we ask you to implement
     - what if the other way happened the user went and didnt find the cake ?
 
 
-## Installation
+# Installation
 ## A-Locally
 ### Prerequistes
   - create a .env file at the root and add the keys like in .env.example file with ur actuall links and data
@@ -95,11 +95,18 @@ $ docker-compose up
 ```
 ## Test
 
+
 ```bash
 # to run tests
 $ npm run test
 
 ```
+# Deployment
+  - deployed the app using [Render](https://render.com/)
+  - there is CD on the branch that is called render
+#  Things to consider:
+  - use a tool like [new Relic](https://newrelic.com/) in production
+  - configure the database backup
       
 ## Technologies
 - Nodejs

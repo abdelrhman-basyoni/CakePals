@@ -106,7 +106,9 @@ $ npm run test
   - there is CD on the branch that is called render
 #  Things to consider:
   - use a tool like [new Relic](https://newrelic.com/) in production
-  - configure the database backup
+  - configure the database backup.
+  - configure cors
+  - configure csrf.
       
 ## Technologies
 - Nodejs

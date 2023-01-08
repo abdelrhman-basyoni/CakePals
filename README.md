@@ -59,20 +59,21 @@ Here are the features that we ask you to implement
     - what if the other way happened the user went and didnt find the cake ?
 
 
-## Installation
-  ### Prerequistes
-    - to run it locally you need:
-      - create a .env file at the root and add the keys like in .env.example file with ur actuall links and data
-      - redis server installed on the host machine, or remote ( you can use the branch called docker and run the docker-compose ).
-      - mongodb instance ready and configured as replicaset not as standalone. ( or you can easily get one from mongo atlas)
-      
+# Installation
+## A-Locally
+### Prerequistes
+  - create a .env file at the root and add the keys like in .env.example file with ur actuall links and data
+  - to run it locally you need:
+    - redis server installed on the host machine, or remote 
+    - mongodb instance ready and configured as replicaset not as standalone.
 
-  # Install packages
-  ```bash
-  $ npm install
-  ```
 
-## Running the app
+### Install packages
+```bash
+$ npm install
+```
+
+### Running the app
 
 ```bash
 
@@ -84,15 +85,31 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+
+## B-Docker
+    
+
+```bash
+$ docker build .
+$ docker-compose up
+```
 ## Test
+
 
 ```bash
 # to run tests
 $ npm run test
 
-# test coverage
-$ npm run test:cov
 ```
+# Deployment
+  - deployed the app using [Render](https://render.com/)
+  - there is CD on the branch that is called render
+#  Things to consider:
+  - use a tool like [new Relic](https://newrelic.com/) in production
+  - configure the database backup.
+  - configure cors
+  - configure csrf.
+      
 ## Technologies
 - Nodejs
 - nestjs
@@ -100,5 +117,6 @@ $ npm run test:cov
 - mongodb
 - jest
 - redis
+- Docker
 
 

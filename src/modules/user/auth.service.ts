@@ -2,6 +2,7 @@ import { BadRequestException, Inject, UnauthorizedException } from "@nestjs/comm
 import { JwtService } from "@nestjs/jwt";
 import { LoginDto } from "../../dtos/login.dto";
 import { TokenDto } from "../../dtos/token.dto";
+import { UserRoles } from "../../enums/userRoles.enum";
 import { config } from "../../shared/config";
 import { errors, messages } from "../../shared/responseCodes";
 import { RedisService } from "../cache/redis.service";
@@ -86,6 +87,18 @@ export class AuthService {
         const accessToken = await this.createRefreshToken(payload);
 
         return accessToken;
+    }
+
+    async guestToken(address: string) {
+        const payload  = {
+            _id:address,
+            role:UserRoles.guest
+
+        }
+        const token = await this.createAccessToken(payload);
+
+        return token;
+
     }
 
 

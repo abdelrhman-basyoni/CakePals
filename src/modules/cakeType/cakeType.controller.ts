@@ -24,28 +24,15 @@ export class CakeTypeController {
     /* POST CakeType End Point */
 
 
-    // @Post('create')
-    // @Role([UserRoles.baker])
-    // async create(@Body() body: CakeTypeDto, @Req() req: any) {
-    //     body.baker = new Types.ObjectId(req.user._id)
-    //     const item = await this.service.create(body);
-    //     return {
-    //         success: item ? true : false,
-    //         message: item ? messages.success.message : errors.notFound.message,
-    //         code: item ? messages.success.code : errors.notFound.code,
-    //         data: {
-    //             item: item
-    //         }
-    //     }
-
-    // }
 
 
 
 
 
     /* GET All  End Point */
+    
     @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @Get('/getAll')
     getAll(@Query('pagesize') pageSize: number, @Query('page') page: number,) {
         return this.service.findAll({}, page || 1, pageSize || 200);

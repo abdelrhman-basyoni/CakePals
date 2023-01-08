@@ -3,7 +3,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Types } from 'mongoose'
 import { LoginDto } from '../../dtos/login.dto';
 import { ResponseDto } from '../../dtos/response.dto';
-import { RegisterBakerDto, RegisterMemberDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
+import { GuestUserDto, RegisterBakerDto, RegisterMemberDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
 import { Role } from '../../guards/roles.decorator';
 import { User } from '../../models/user.model';
 import { UserService } from './user.service';
@@ -13,14 +13,15 @@ import { UserRoles } from '../../enums/userRoles.enum';
 import { GeoLocation } from '../../models/shared'
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { checkPasswordStrength } from '../../shared/utils';
 @ApiTags('User')
 @Controller('User')
 export class UserController {
 
     constructor(
         private service: UserService,
-        private authService : AuthService
-        ) { }
+        private authService: AuthService
+    ) { }
     /* POST User End Point */
 
 
@@ -29,7 +30,7 @@ export class UserController {
     async signUp(@Body() body: RegisterMemberDto): Promise<ResponseDto> {
 
         body.role = UserRoles.member
-
+        const checked = checkPasswordStrength(body.password)
         const serviceRes = await this.service.create(body)
         return {
             success: true,
@@ -44,6 +45,8 @@ export class UserController {
 
 
     }
+
+
     @Post('/register-baker')
     async bakerRegister(@Body() body: RegisterBakerDto): Promise<ResponseDto> {
 
@@ -51,8 +54,9 @@ export class UserController {
          * c
          */
         if (body.profile.collectionTimeRange.end.hour < (body.profile.collectionTimeRange.start.hour + 6)) {
-            throw new BadRequestException('invalid request')
+            throw new BadRequestException(errors.invalidRequest)
         }
+        checkPasswordStrength(body.password)
         body.role = UserRoles.baker
         const location = {
             type: "Point",
@@ -71,6 +75,8 @@ export class UserController {
         }
 
     }
+
+
     @Post('/login')
     async logiIn(@Body() body: LoginDto): Promise<ResponseDto> {
 
@@ -99,21 +105,36 @@ export class UserController {
 
         const token = req.headers['authorization'].split(" ")[1]
         const accessToken = await this.authService.refreshToken(token)
-        
+
         return {
             success: true,
             message: messages.success.message,
             code: messages.success.code,
-            data:{
+            data: {
                 accessToken
             }
         }
     }
 
+    @Post('guesttoken')
+    async guestToken(@Body() body: GuestUserDto) {
+        const token = await this.authService.guestToken(body.address)
 
+
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                accessToken: token
+            }
+        }
+
+    }
 
     /* GET All  End Point */
     @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @Get('/getAll')
     getAll(@Query('pagesize') pageSize: number, @Query('page') page: number,) {
         return this.service.findAll({}, page || 1, pageSize || 20);
@@ -123,6 +144,7 @@ export class UserController {
 
     /* GET One User End Point */
     @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @Get('/findOne/:id')
     async findOne(@Param('id') id: string): Promise<ResponseDto> {
         const user = await this.service.findOneById(id);
@@ -139,6 +161,8 @@ export class UserController {
         }
     }
 
+    @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @Get('/bakerProfile/:id')
     async findBakerProfile(@Param('id') id: string): Promise<ResponseDto> {
         const user = await this.service.findOne({
@@ -165,22 +189,28 @@ export class UserController {
 
     /* PUT  User End Point */
     @ApiBearerAuth()
-    @Put('/updateOne:id')
-    async updateOne(@Param('id') id: string, @Body() req: UpdateUserDto) {
+    @Role([UserRoles.member, UserRoles.baker])
+    @Put('/updateOne')
+    async updateOne(@Body() body: UpdateUserDto, @Req() req: any) {
         /** allow only the profile field if the user is baker */
-        switch (req.role) {
+        const requestUser = req.user;
+        switch (requestUser.role) {
+            /** insure that no leake in user profile */
             case UserRoles.baker: {
                 break;
             }
             default: {
-                req.profile = undefined;
+                body.profile = undefined;
             }
         }
-        const user = await this.service.findByIdAndUpdate(id, req);
+        const user = await this.service.findByIdAndUpdate(requestUser._id, body);
+        if (!user) {
+            throw new BadRequestException(errors.invalidRequest)
+        }
         return {
-            success: user ? true : false,
-            message: user ? messages.success.message : errors.notFound.message,
-            code: user ? messages.success.code : errors.notFound.code,
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
             data: {
                 item: user
             }
@@ -191,7 +221,6 @@ export class UserController {
 
     /* Delete  User End Point */
     @ApiBearerAuth()
-    // @UseGuards(JwtAuthGuard)
     @Role([UserRoles.admin])
     @Delete('/deleteOne/:id')
     async deleteOne(@Param('id') id: string) {
@@ -206,7 +235,8 @@ export class UserController {
         }
     }
 
-
+    @ApiBearerAuth()
+    @Role([UserRoles.member, UserRoles.baker, UserRoles.guest])
     @Get('/getAvailableCollectingTimes/:id')
     async getAvailabilities(@Param('id') bakerId: string, @Query('cake') cakeId: string) {
 

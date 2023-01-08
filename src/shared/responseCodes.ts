@@ -19,6 +19,14 @@ export const errors = {
         code:4,
         message: "loginFailed"
     } ,
+    "invalidRequest":{
+        code:5,
+        message: "invalidRequest"
+    } ,
+    "weakPassword":{
+        code:6,
+        message: "weakPassword"
+    } ,
 }
 
 export const messages = {

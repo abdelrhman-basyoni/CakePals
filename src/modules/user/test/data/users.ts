@@ -1,19 +1,20 @@
 export const member1 = {
   username: 'user',
   email: 'user@example.com',
-  password: "password"
+  password: "A23_gH@123"
 }
 export const member2 = {
   username: 'user2',
   email: 'user2@example.com',
-  password: "password8"
+  password: "A23_gH@123"
 }
 
 export const baker1 = {
   "username": "baker1",
   "email": "baker1@email.com",
-  "password": "password8",
+  "password": "A23_gH@123",
   "profile": {
+    "IsAcceptingOrders":true,
     "pic": "https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png",
     "about": "this is a dummy baker",
     "location": [

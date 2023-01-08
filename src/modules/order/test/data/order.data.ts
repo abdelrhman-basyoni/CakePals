@@ -9,6 +9,7 @@ export const bakerEx1 = {
     "password": "password8",
     role: UserRoles.baker,
     "profile": {
+        "IsAcceptingOrders":true,
         "pic": "https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png",
         "about": "this is a dummy baker",
         "location": [

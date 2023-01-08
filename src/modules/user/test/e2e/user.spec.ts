@@ -10,6 +10,7 @@ import { baker1, member1, member2 } from '../data/users';
 import { hashPassword, removeKeys } from '../../../../shared/utils';
 import { RedisService } from '../../../cache/redis.service';
 import { Redis } from 'ioredis';
+import { closeWinstonConnection } from '../../../../logger/logger';
 let app: INestApplication;
 let dbConnection: Connection;
 let httpServer: any;
@@ -37,6 +38,7 @@ afterAll(async () => {
     // Close the server instance after each test
     await httpServer.close()
     redis.disconnect()
+    closeWinstonConnection()
 })
 describe('user controller basic endpoints  (e2e)', () => {
     /**

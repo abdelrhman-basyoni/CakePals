@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { LoginDto } from "../../dtos/login.dto";
 import { TokenDto } from "../../dtos/token.dto";
 import { UserRoles } from "../../enums/userRoles.enum";
-import { config } from "../../shared/config";
+import { appSettings } from "../../shared/app.settings";
 import { errors, messages } from "../../shared/responseCodes";
 import { RedisService } from "../cache/redis.service";
 import { UserService } from "./user.service";
@@ -106,7 +106,7 @@ export class AuthService {
     async createAccessToken(payload: TokenDto) {
         const refreshToken = await this.jwtService.signAsync(payload, {
             secret: process.env.ACCESS_TOKEN_SECRET,
-            expiresIn: config.accessTokenExpiresIn
+            expiresIn: appSettings.accessTokenExpiresIn
         });
         return refreshToken;
     }
@@ -114,7 +114,7 @@ export class AuthService {
     async createRefreshToken(payload: TokenDto) {
         const accessToken = await this.jwtService.signAsync(payload, {
             secret: process.env.REFRESH_TOKEN_SECRET,
-            expiresIn: config.refreshTokenExpiresIn
+            expiresIn: appSettings.refreshTokenExpiresIn
         });
         return accessToken;
     }

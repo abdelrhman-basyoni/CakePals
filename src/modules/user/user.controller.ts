@@ -3,7 +3,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Types } from 'mongoose'
 import { LoginDto } from '../../dtos/login.dto';
 import { ResponseDto } from '../../dtos/response.dto';
-import { GuestUserDto, RegisterBakerDto, RegisterMemberDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
+import { GuestUserDto, RegisterBakerDto, RegisterMemberDto, ToggleAcceptingOrdersDto, UpdateUserDto, UserDto } from '../../dtos/user.dto'
 import { Role } from '../../guards/roles.decorator';
 import { User } from '../../models/user.model';
 import { UserService } from './user.service';
@@ -14,12 +14,16 @@ import { GeoLocation } from '../../models/shared'
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { checkPasswordStrength } from '../../shared/utils';
+import { appSettings } from '../../shared/app.settings';
+import { CakeService } from '../cake/cake.service';
+
 @ApiTags('User')
 @Controller('User')
 export class UserController {
 
     constructor(
         private service: UserService,
+        private cakeService: CakeService,
         private authService: AuthService
     ) { }
     /* POST User End Point */
@@ -53,7 +57,7 @@ export class UserController {
         /** validate if the the collection time range bigger than the start + 6 hours
          * c
          */
-        if (body.profile.collectionTimeRange.end.hour < (body.profile.collectionTimeRange.start.hour + 6)) {
+        if (body.profile.collectionTimeRange.end.hour < (body.profile.collectionTimeRange.start.hour + appSettings.minWorkingHours)) {
             throw new BadRequestException(errors.invalidRequest)
         }
         checkPasswordStrength(body.password)
@@ -217,6 +221,26 @@ export class UserController {
         }
     }
 
+    @ApiBearerAuth()
+    @Role([UserRoles.baker])
+    @Put('/updateOne')
+    async toggleAcceptingOrders(@Body() body: ToggleAcceptingOrdersDto, @Req() req: any) {
+        /** allow only the profile field if the user is baker */
+
+        const user = await this.service.findByIdAndUpdate(req.user._id, {"profile.IsAcceptingOrders":body.IsAcceptingOrders});
+        if (!user) {
+            throw new BadRequestException(errors.notFound)
+        }
+        return {
+            success: true,
+            message: messages.success.message,
+            code: messages.success.code,
+            data: {
+                item: user
+            }
+        }
+    }
+
 
 
     /* Delete  User End Point */
@@ -240,7 +264,16 @@ export class UserController {
     @Get('/getAvailableCollectingTimes/:id')
     async getAvailabilities(@Param('id') bakerId: string, @Query('cake') cakeId: string) {
 
-        const times = await this.service.getAvailableCollectingTimes(bakerId, cakeId)
+        const cake = await this.cakeService.findOneById(cakeId);
+        const baker = await this.service.findOne({ _id: new Types.ObjectId(String(cake.baker)), role: UserRoles.baker,"profile.IsAcceptingOrders":true });
+        if(!baker || !cake){
+            throw new BadRequestException(errors.invalidRequest)
+        }
+        if(!baker.profile.IsAcceptingOrders){
+            throw new BadRequestException(errors.bakerNotAcceptingOrders)
+        }
+
+        const times = await this.service.getAvailableCollectingTimes(baker, cake)
 
 
         return {

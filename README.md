@@ -109,6 +109,8 @@ $ npm run test
   - configure the database backup.
   - configure cors
   - configure csrf.
+  - setup api cashing ( use nginx or the  host servie provider settings)
+  - setup rate limiter ( use nginx or the  host servie provider settings)
       
 ## Technologies
 - Nodejs

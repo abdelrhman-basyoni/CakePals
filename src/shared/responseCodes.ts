@@ -23,6 +23,10 @@ export const errors = {
         code:5,
         message: "invalidRequest"
     } ,
+    "weakPassword":{
+        code:6,
+        message: "weakPassword"
+    } ,
 }
 
 export const messages = {

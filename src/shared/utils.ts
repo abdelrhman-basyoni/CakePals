@@ -2,7 +2,10 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { TokenDto } from '../dtos/token.dto';
 import { config } from './config';
+import { BadRequestException } from '@nestjs/common'
 import { TokenTypes } from '../enums/tokenTypes.enum';
+import * as zxcvbn from 'zxcvbn';
+import { errors } from './responseCodes';
 export async function hashPassword(candidatePassword) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(candidatePassword, salt);
@@ -66,16 +69,27 @@ export function addTime(hours: number, minutes: number, givenDate?: Date) {
 export function getRawTime(hours: number, minutes: number) {
     // let date = new Date(); // current date and time
 
-     hours = hours * 60 * 60 * 1000; //  hours in milliseconds
-     minutes = minutes * 60 * 1000; //  minutes in milliseconds
+    hours = hours * 60 * 60 * 1000; //  hours in milliseconds
+    minutes = minutes * 60 * 1000; //  minutes in milliseconds
 
     // date.setTime(date.getTime() + hours + minutes);
 
-    return Number(hours+minutes)
+    return Number(hours + minutes)
 }
 
 export function generateUniqueCode(): number {
     let code = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
 
     return code;
+}
+
+export function checkPasswordStrength(password: string): number {
+    const result = zxcvbn(password);
+    if (result.score < 3){
+        throw new BadRequestException({
+            code:errors.weakPassword.code,
+            message: result.feedback.warning || " invalid password"
+        })
+    }
+    return result.score;
   }

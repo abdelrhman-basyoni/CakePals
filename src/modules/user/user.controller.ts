@@ -13,6 +13,7 @@ import { UserRoles } from '../../enums/userRoles.enum';
 import { GeoLocation } from '../../models/shared'
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { checkPasswordStrength } from '../../shared/utils';
 @ApiTags('User')
 @Controller('User')
 export class UserController {
@@ -29,7 +30,7 @@ export class UserController {
     async signUp(@Body() body: RegisterMemberDto): Promise<ResponseDto> {
 
         body.role = UserRoles.member
-
+        const checked = checkPasswordStrength(body.password)
         const serviceRes = await this.service.create(body)
         return {
             success: true,
@@ -53,8 +54,9 @@ export class UserController {
          * c
          */
         if (body.profile.collectionTimeRange.end.hour < (body.profile.collectionTimeRange.start.hour + 6)) {
-            throw new BadRequestException('invalid request')
+            throw new BadRequestException(errors.invalidRequest)
         }
+        checkPasswordStrength(body.password)
         body.role = UserRoles.baker
         const location = {
             type: "Point",

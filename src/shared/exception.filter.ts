@@ -55,11 +55,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     if(res.code === errors.internalServerError.code){
       /** this the n a critical error  */
-      console.log('here')
+
       logger.error('probably a critical error',exception)
     }else{
-      console.log('here2')
-      logger.warning('an error has occured',exception)
+
+      logger.warn('an error has occured',exception)
     }
     response.status(status)
     response.send(res);

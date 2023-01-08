@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16-alpine as build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # Copy the .env file to the dist folder
-# COPY .env dist
+COPY .env dist
 
 # Create a production image
 FROM node:latest

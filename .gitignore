@@ -40,3 +40,4 @@ client.http
 .eslintrc.js
 uploads/
 docker/*
+volumes/*

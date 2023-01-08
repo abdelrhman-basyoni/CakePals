@@ -13,9 +13,6 @@ COPY . .
 # Build the app
 RUN npm run build
 
-# Copy the .env file to the dist folder
-# COPY .env dist
-
 # Create a production image
 FROM node:latest
 

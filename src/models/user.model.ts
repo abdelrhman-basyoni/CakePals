@@ -1,4 +1,3 @@
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
@@ -7,8 +6,6 @@ import { BaseEntity } from './baseEntity.model';
 import * as bcrypt from 'bcrypt';
 import { GeoLocation, DayTime } from './shared';
 export type UserDocument = User & Document;
-
-
 
 export class CollectionTimeRange {
   @Prop({ type: () => DayTime })
@@ -25,30 +22,24 @@ export class Profile {
   @Prop({})
   about: string;
 
-  @Prop({ default: 5})
+  @Prop({ default: 5 })
   rating: number;
 
-  @Prop({ default: 1, })
+  @Prop({ default: 1 })
   ratedOrders: number;
 
-  @Prop({ default: 0,  })
+  @Prop({ default: 0 })
   totalOrders: number;
 
   @Prop({ type: () => GeoLocation })
   location: GeoLocation;
 
   @Prop({ type: () => CollectionTimeRange })
-  collectionTimeRange: CollectionTimeRange
+  collectionTimeRange: CollectionTimeRange;
 
-  @Prop({default:true})
+  @Prop({ default: true })
   IsAcceptingOrders: boolean;
-
 }
-
-
-
-
-
 
 @Schema({
   autoIndex: true,
@@ -64,19 +55,16 @@ export class User extends BaseEntity {
   @Prop({ unique: true })
   email: string;
 
-
   @Prop({ select: false })
   password: string;
-
 
   @Prop({ type: () => Profile })
   profile?: Profile;
 
-
   @Prop({
     enum: UserRoles,
     type: String,
-    default: UserRoles.member
+    default: UserRoles.member,
   })
   role: UserRoles;
 
@@ -85,7 +73,7 @@ export class User extends BaseEntity {
 
   async checkPassword(candidatePassword: string) {
     return bcrypt.compare(candidatePassword, this.password);
-  };
+  }
 }
 export const UserSchema = SchemaFactory.createForClass(User);
 

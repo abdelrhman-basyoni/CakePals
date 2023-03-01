@@ -1,11 +1,11 @@
 export enum OrderStatus {
-    pending = 'pending',
-    accepted = 'accepted',
-    rejected = 'rejected',
-    collected = 'collected'
+  pending = 'pending',
+  accepted = 'accepted',
+  rejected = 'rejected',
+  collected = 'collected',
 }
 
-export enum HotOrNot { 
-    hot = 'hot',
-    not = 'not'
+export enum HotOrNot {
+  hot = 'hot',
+  not = 'not',
 }

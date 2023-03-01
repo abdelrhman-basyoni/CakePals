@@ -1,10 +1,7 @@
-export class BaseEntityDto  {
-    _id?: any;
-  
+export class BaseEntityDto {
+  _id?: any;
 
-    createdAt?: number;
+  createdAt?: number;
 
-
-    updatedAt?: number;
-  }
-  
+  updatedAt?: number;
+}

@@ -11,39 +11,24 @@ import { OrderModule } from './modules/order/order.module';
 import { CakeTypeModule } from './modules/cakeType/cakeType.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 
-const appModules = [
-  UserModule,
-  CakeModule,
-  OrderModule,
-  CakeTypeModule
-  
-]
+const appModules = [UserModule, CakeModule, OrderModule, CakeTypeModule];
 
 @Module({
   imports: [
-
     ConfigModule.forRoot({
-      isGlobal:true
+      isGlobal: true,
     }),
     RedisModule.forRoot({
-      config: { 
-
+      config: {
         url: process.env.REDIS_URL,
-        username : process.env.REDIS_USERNAME,
-        password : process.env.REDIS_PASSWORD
+        username: process.env.REDIS_USERNAME,
+        password: process.env.REDIS_PASSWORD,
       },
     }),
     DatabaseModule,
-    ...appModules
-
-
+    ...appModules,
   ],
   controllers: [AppController],
   providers: [AppService],
-
-
 })
-export class AppModule {
-
-}
-
+export class AppModule {}

@@ -1,15 +1,11 @@
-import { Prop } from "@nestjs/mongoose";
+import { Prop } from '@nestjs/mongoose';
 
+export class BaseEntity {
+  _id?: any;
 
-export class BaseEntity  {
-    _id?: any;
-  
-    @Prop({})
+  @Prop({})
+  createdAt?: number;
 
-    createdAt?: number;
-
-    @Prop({})
-
-    updatedAt?: number;
-  }
-  
+  @Prop({})
+  updatedAt?: number;
+}

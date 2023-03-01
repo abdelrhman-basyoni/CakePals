@@ -1,9 +1,6 @@
-
 export class ResponseDto {
-    success: boolean;
-    message: string;
-    code: number;
-    data?:{
-
-    }
+  success: boolean;
+  message: string;
+  code: number;
+  data?: {};
 }

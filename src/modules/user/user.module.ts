@@ -6,41 +6,49 @@ import { User, UserSchema } from '../../models/user.model';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
-import { JwtStrategy, JwtStrategyRefreshToken } from '../../guards/jwt.strategy';
+import {
+  JwtStrategy,
+  JwtStrategyRefreshToken,
+} from '../../guards/jwt.strategy';
 
 import { CakeModule } from '../cake/cake.module';
 import { OrderModule } from '../order/order.module';
 import { RedisService } from '../cache/redis.service';
 import { AuthService } from './auth.service';
 
-
 @Module({
-    imports: [
+  imports: [
+    MongooseModule.forFeatureAsync([
+      {
+        name: User.name,
+        useFactory: async () => {
+          const schema = UserSchema;
+          return schema;
+        },
+      },
+    ]),
+    PassportModule,
+    JwtModule.registerAsync({
+      useFactory: () => ({}),
+    }),
 
-        MongooseModule.forFeatureAsync([
-            {
-                name: User.name,
-                useFactory: async () => {
-                    const schema = UserSchema;
-                    return schema;
-                },
-            },
-        ]),
-        PassportModule,
-        JwtModule.registerAsync({
-            useFactory: () => ({
-
-            }),
-
-        }),
-
-        forwardRef(() => CakeModule),
-        forwardRef(() => OrderModule),
-
-
-    ],
-    controllers: [UserController],
-    providers: [AuthService,UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService],
-    exports: [AuthService,UserService, JwtStrategy, JwtStrategyRefreshToken, RedisService]
+    forwardRef(() => CakeModule),
+    forwardRef(() => OrderModule),
+  ],
+  controllers: [UserController],
+  providers: [
+    AuthService,
+    UserService,
+    JwtStrategy,
+    JwtStrategyRefreshToken,
+    RedisService,
+  ],
+  exports: [
+    AuthService,
+    UserService,
+    JwtStrategy,
+    JwtStrategyRefreshToken,
+    RedisService,
+  ],
 })
-export class UserModule { }
+export class UserModule {}
